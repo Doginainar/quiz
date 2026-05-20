@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Quiz Harper's - Metabolismo dos Lipídeos & Proteínas/Aminoácidos (Corrigido)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            background: #f0f4f9;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #1a2c3e;
+        }
+        .quiz-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 36px;
+            box-shadow: 0 16px 32px rgba(0,0,0,0.08);
+            overflow: hidden;
+            padding: 1.8rem 2rem 2rem;
+        }
+        @media (max-width: 600px) {
+            .quiz-container { padding: 1.2rem; }
+        }
+        .progress-wrapper {
+            margin-bottom: 1.5rem;
+        }
+        .progress-bar-bg {
+            background: #e2e8f0;
+            height: 6px;
+            border-radius: 8px;
+        }
+        .progress-fill {
+            background: #2c7a5e;
+            height: 6px;
+            border-radius: 8px;
+            width: 0%;
+            transition: width 0.25s ease;
+        }
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 0.75rem;
+        }
+        .q-counter {
+            font-size: 0.8rem;
+            font-weight: 500;
+            background: #eef2f8;
+            padding: 4px 14px;
+            border-radius: 40px;
+            color: #2c4f6e;
+        }
+        .q-topic {
+            font-size: 0.75rem;
+            background: #e0e9f2;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #1f5068;
+        }
+        .q-text {
+            font-size: 1.3rem;
+            font-weight: 550;
+            line-height: 1.45;
+            margin: 1rem 0 1.3rem;
+            color: #0b2f44;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+        }
+        .opt-btn {
+            background: white;
+            border: 1px solid #dce5ef;
+            border-radius: 24px;
+            padding: 0.85rem 1.2rem;
+            font-size: 0.94rem;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.12s;
+            font-family: inherit;
+            color: #1a2c3e;
+        }
+        .opt-btn:hover:not(:disabled) {
+            background: #fafcff;
+            border-color: #94a9c2;
+            transform: translateY(-1px);
+        }
+        .opt-letter {
+            font-weight: 700;
+            background: #eef2f8;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 30px;
+            font-size: 0.85rem;
+        }
+        .opt-btn.correct {
+            background: #e0f2ea;
+            border-color: #2c7a5e;
+        }
+        .opt-btn.correct .opt-letter {
+            background: #c8e6db;
+            color: #145c46;
+        }
+        .opt-btn.wrong {
+            background: #feeceb;
+            border-color: #cf7a7a;
+        }
+        .opt-btn.wrong .opt-letter {
+            background: #fad8d8;
+            color: #b14b4b;
+        }
+        .opt-btn:disabled {
+            cursor: default;
+        }
+        .feedback {
+            margin: 1rem 0 1.2rem;
+            padding: 0.9rem 1.3rem;
+            border-radius: 24px;
+            font-size: 0.9rem;
+            line-height: 1.45;
+            display: none;
+        }
+        .feedback.correct {
+            background: #e0f2ea;
+            border-left: 5px solid #2c7a5e;
+            color: #135a45;
+        }
+        .feedback.wrong {
+            background: #feeceb;
+            border-left: 5px solid #cf7a7a;
+            color: #9b3e3e;
+        }
+        .nav-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.3rem;
+        }
+        .score-inline {
+            font-size: 0.85rem;
+            font-weight: 500;
+            background: #f0f4f9;
+            padding: 6px 16px;
+            border-radius: 40px;
+        }
+        .btn {
+            background: white;
+            border: 1px solid #cbdde9;
+            padding: 8px 22px;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.1s;
+            font-family: inherit;
+        }
+        .btn-primary {
+            background: #2c7a5e;
+            border-color: #2c7a5e;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #1e5f48;
+        }
+        .btn:hover {
+            background: #eef3fc;
+        }
+        .result-screen {
+            text-align: center;
+            padding: 1rem 0.5rem;
+        }
+        .final-score {
+            font-size: 4rem;
+            font-weight: 700;
+            color: #2c7a5e;
+            margin: 0.5rem 0;
+        }
+        .score-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+        .stat-card {
+            background: #f8fafd;
+            padding: 0.7rem 1.8rem;
+            border-radius: 48px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .green-txt { color: #2c7a5e; }
+        .red-txt { color: #c86363; }
+        button:active { transform: scale(0.97);}
+    </style>
+</head>
+<body>
+<div class="quiz-container" id="quizContainer">
+    <div id="quizMain">
+        <div class="progress-wrapper">
+            <div class="progress-bar-bg"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+        <div class="q-header">
+            <span class="q-counter" id="qCounter">Pergunta 1 de 49</span>
+            <span class="q-topic" id="qTopic">Carregando...</span>
+        </div>
+        <div class="q-text" id="qText"></div>
+        <div class="options" id="optionsArea"></div>
+        <div class="feedback" id="feedbackMsg"></div>
+        <div class="nav-row">
+            <div class="score-inline" id="scoreInline">✔️ 0 &nbsp; ❌ 0</div>
+            <button class="btn btn-primary" id="nextBtn" style="display: none;">Próxima →</button>
+        </div>
+    </div>
+    <div id="resultArea" style="display: none;">
+        <div class="result-screen">
+            <div class="final-score" id="finalPercent"></div>
+            <p style="color: #2c506d; margin-bottom: 0.2rem;" id="resultMsg"></p>
+            <div class="score-stats">
+                <div class="stat-card"><div class="stat-number green-txt" id="finalCorrect"></div><div class="stat-label">Corretas</div></div>
+                <div class="stat-card"><div class="stat-number red-txt" id="finalWrong"></div><div class="stat-label">Erradas</div></div>
+            </div>
+            <button class="btn btn-primary" id="restartBtn">🔄 Recomeçar (Ordem aleatória)</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ======================= SEÇÃO V – METABOLISMO DOS LIPÍDEOS (30 questões, conforme PDF CORRIGIDO) =======================
+    const lipidQuestions = [
+        { topic: "Ácidos graxos", text: "1. Qual das afirmativas a seguir relacionadas às moléculas de ácidos graxos está CORRETA?", opts: ["Elas consistem em um grupo cabeça de ácido carboxílico ligado a uma cadeia de carboidratos.", "Elas são chamadas de poliinsaturadas quando contêm uma ou mais duplas ligações carbono-carbono.", "Os seus pontos de fusão aumentam com o aumento do número de insaturações.", "Elas quase sempre têm suas duplas ligações na configuração cis quando ocorrem naturalmente.", "Elas ocorrem no organismo, principalmente, na forma de ácidos graxos livres (não esterificados)."], answer: 3, explanation: "Os ácidos graxos naturais têm duplas ligações quase sempre em configuração cis, o que influencia a fluidez das membranas." },
+        { topic: "Fosfolipídeos", text: "2. Qual dos seguintes NÃO é um fosfolipídeo?", opts: ["Esfingomielina", "Plasmalogênio", "Cardiolipina", "Galactosilceramida", "Lisolecitina"], answer: 3, explanation: "Galactosilceramida é um glicoesfingolipídeo (cerebrosídeo), não contém fosfato. Os demais são fosfolipídeos." },
+        { topic: "Gangliosídeos", text: "3. Qual das afirmativas a seguir sobre gangliosídeos está INCORRETA?", opts: ["Eles são derivados da galatosilceramida.", "Eles contêm uma molécula ou mais de ácido siálico.", "Eles estão presentes no tecido nervoso em altas concentrações.", "O gangliosídeo GM1 é o receptor da toxina colérica no intestino humano.", "Eles atuam no reconhecimento célula a célula."], answer: 0, explanation: "Gangliosídeos são derivados da glicosilceramida, e não da galactosilceramida." },
+        { topic: "Antioxidantes", text: "4. Qual dos seguintes é um antioxidante que quebra a cadeia?", opts: ["Glutationa-peroxidase", "Selênio", "Superóxido-dismutase", "EDTA", "Catalase"], answer: 2, explanation: "A Superóxido-dismutase (SOD) é classificada como antioxidante que quebra a cadeia de radicais; as demais atuam como antioxidantes preventivos." },
+        { topic: "Corpos cetônicos", text: "5. Depois de produzidos a partir de acetil-CoA no fígado, os corpos cetônicos são utilizados principalmente em qual dos processos a seguir?", opts: ["Excreção como resíduo.", "Geração de energia no fígado.", "Conversão de ácidos graxos para estoque de energia.", "Geração de energia nos tecidos.", "Geração de energia nas hemácias."], answer: 3, explanation: "Corpos cetônicos são exportados para tecidos extra-hepáticos (músculo, cérebro, coração) como fonte de energia." },
+        { topic: "β-oxidação", text: "6. O local subcelular da quebra dos ácidos graxos de cadeia longa à acetil-CoA através da β-oxidação é:", opts: ["O citosol.", "A matriz mitocondrial.", "O retículo endoplasmático.", "O espaço intermembrana da mitocôndria.", "O aparelho de Golgi."], answer: 1, explanation: "A β-oxidação ocorre na matriz mitocondrial." },
+        { topic: "Carnitina", text: "7. A carnitina é necessária para a oxidação de ácidos graxos PORQUE:", opts: ["Ela é um cofator para a acil-CoA-sintase, que ativa os ácidos graxos para a degradação.", "Acil-CoA de cadeia longa (“ácidos graxos ativados”) precisam entrar na matriz mitocondrial para serem oxidados, porém não podem atravessar a membrana mitocondrial externa. A transferência do grupo acil-CoA para a carnitina possibilita que o deslocamento ocorra.", "Acil-CoA de cadeia longa precisam entrar no espaço intermembrana da mitocôndria para serem oxidados, porém não podem atravessar a membrana mitocondrial interna. A transferência do grupo acil-CoA para a carnitina possibilita que o deslocamento ocorra.", "Previne a quebra de ácido graxo acil-CoA de cadeia longa no espaço intermembrana da mitocôndria."], answer: 2, explanation: "Os ácidos graxos de cadeia longa são ativados ao se ligarem à CoA, mas a acil-CoA graxo não consegue atravessar a membrana mitocondrial interna. Após a transferência do grupo acil da CoA para a carnitina pela carnitina-palmitoil-transferase (CPT)-I, a acilcarnitina é transportada através da membrana pela carnitina-acilcarnitina-translocase em troca de uma carnitina. Dentro da matriz, a CPT-II transfere o grupo acil de volta para a CoA, e a carnitina é levada de volta para o espaço intermembrana pela enzima-translocase." },
+        { topic: "β-oxidação", text: "8. A degradação de uma molécula de um ácido graxo C16 completamente saturado (ácido palmítico) por β-oxidação leva à formação de:", opts: ["8 FADH2, 8 NADH e 8 moléculas de acetil-CoA", "7 FADH2, 7 NADH e 7 moléculas de acetil-CoA", "8 FADH2, 8 NADH e 7 moléculas de acetil-CoA", "7 FADH2, 8 NADH e 8 moléculas de acetil-CoA", "7 FADH2, 7 NADH e 8 moléculas de acetil-CoA"], answer: 4, explanation: "Palmitato (C16) requer 7 ciclos de β-oxidação → 7 FADH2, 7 NADH e 8 acetil-CoA." },
+        { topic: "Malonil-CoA", text: "9. Malonil-CoA, o primeiro intermediário na síntese de ácidos graxos, é um importante regulador do metabolismo de ácidos graxos PORQUE:", opts: ["A sua formação a partir de acetil-CoA e bicarbonato pela enzima acetil-CoA-carboxilase é a principal etapa limitante da velocidade de síntese dos ácidos graxos.", "Previne a entrada de grupos de ácidos graxos acil na matriz mitocondrial porque é um potente inibidor da carnitina-palmitoil-transferase-I.", "Previne a entrada de grupos de ácidos graxos acil na matriz mitocondrial porque é um potente inibidor da carnitina-palmitoil-transferase-II.", "Previne a entrada de grupos de ácidos graxos acil na matriz mitocondrial porque é um potente inibidor da carnitina-acilcarnitina-transferase.", "Inibe a síntese do ácido graxo acil-CoA."], answer: 1, explanation: "Malonil-CoA inibe a CPT-I, impedindo a entrada de ácidos graxos na mitocôndria para oxidação." },
+        { topic: "Essenciais", text: "10. O ácido α-linolênico é considerado nutricionalmente essencial para os seres humanos PORQUE:", opts: ["Ele é um ácido graxo ω3.", "Ele contém três duplas ligações.", "Em seres humanos, a dupla ligação não pode ser introduzida em ácidos graxos acima da posição Δ9.", "Em seres humanos, a dupla ligação não pode ser introduzida em ácidos graxos acima da posição Δ12.", "Tecidos humanos não são capazes de introduzir uma dupla ligação na posição Δ9 dos ácidos graxos."], answer: 2, explanation: "Humanos não possuem dessaturases para introduzir duplas ligações além da posição Δ9; portanto, ácidos graxos ω3 (como α-linolênico) e ω6 são essenciais." },
+        { topic: "Regulação", text: "11. A inativação da acetil-CoA-carboxilase é favorecida QUANDO:", opts: ["Os níveis de citrato citosólico estão altos.", "Ela estiver na forma polimérica.", "Os níveis de palmitoil-CoA forem baixos.", "O transportador de tricarboxilatos estiver inibido.", "Ela estiver desfosforilada."], answer: 3, explanation: "A inibição do transportador de ácidos tricarboxílicos faz os níveis de citrato no citosol diminuírem, e isso favorece a inativação da enzima." },
+        { topic: "Eicosanoides", text: "12. Qual dos eicosanoides a seguir é sintetizado a partir do ácido linoleico através da via da cicloxigenase?", opts: ["Prostaglandina E (PGE1).", "Leucotrieno A (LTA3).", "Prostaglandina E (PGE3).", "Lipoxina A (LXA4).", "Tromboxano A (TXA3)."], answer: 0, explanation: "A PGE1 é derivada do ácido dihomo-γ-linolênico (metabólito do ácido linoleico) via cicloxigenase." },
+        { topic: "AINE", text: "13. Qual das enzimas a seguir é inibida pelo ácido acetilsalicílico, um anti-inflamatório não esteroide (AINE)?", opts: ["Lipoxigenase.", "Prostaciclina-sintase.", "Cicloxigenase.", "Tromboxano-sintase.", "Δ6-dessaturase."], answer: 2, explanation: "O AAS inibe irreversivelmente as cicloxigenases COX-1 e COX-2, reduzindo a síntese de prostaglandinas." },
+        { topic: "Síntese AG", text: "14. Qual das opções a seguir é o principal produto do ácido graxo-sintase?", opts: ["Acetil-CoA.", "Oleato.", "Palmitoil-CoA.", "Acetacetato.", "Palmitato."], answer: 4, explanation: "O complexo ácido graxo-sintase (FAS) produz palmitato (C16:0)." },
+        { topic: "Diferenças", text: "15. Qual das afirmativas a seguir relacionada a essas diferenças (degradação vs síntese) está INCORRETA?", opts: ["A degradação dos ácidos graxos ocorre dentro da mitocôndria, ao passo que a síntese ocorre no citosol.", "A degradação dos ácidos graxos utiliza NAD+ e produz NADH, ao passo que a síntese utiliza NADPH e produz NADP+.", "Os grupos de ácidos graxos acil são ativados para separação utilizando CoA e para síntese utilizando a proteína carreadora de grupos acila.", "O transporte através da membrana mitocondrial de grupos de ácidos graxos acil e acetil-CoA é necessário para a degradação e síntese de ácidos graxos, respectivamente.", "O glucagon promove a síntese de ácidos graxos e inibe a degradação dos ácidos graxos."], answer: 4, explanation: "O glucagon inibe a síntese e estimula a degradação (lipólise). Afirmativa incorreta." },
+        { topic: "Lipase sensível", text: "16. A lipase sensível a hormônio, a enzima que mobiliza ácidos graxos a partir dos estoques de triacilgliceróis no tecido adiposo, é inibida por:", opts: ["Glucagon.", "ACTH.", "Epinefrina.", "Vasopressina.", "Prostaglandina E."], answer: 4, explanation: "A prostaglandina E (PGE) inibe a HSL; os demais hormônios a ativam via AMPc." },
+        { topic: "Fosfolipase C", text: "17. Qual das alternativas a seguir melhor descreve a ação da fosfolipase C?", opts: ["Ela libera a cadeia de acil da posição sn-2 de um fosfolipídeo.", "Ela cliva um fosfolipídeo em seu grupo principal contendo fosfato e um diacilglicerol.", "Ela libera o grupo principal de um fosfolipídeo, gerando ácido fosfatídico.", "Ela libera a cadeia de acil da posição sn-1 de um fosfolipídeo.", "Ela libera as cadeias de acil das posições sn-1 e sn-2 de um fosfolipídeo."], answer: 1, explanation: "A fosfolipase C cliva o fosfolipídeo entre o glicerol e o fosfato, gerando diacilglicerol (DAG) e um grupo cabeça fosforilado (ex: IP3)." },
+        { topic: "Tay-Sachs", text: "18. O distúrbio de Tay Sachs é uma doença de armazenamento de lipídeo causada por um defeito genético que causa a deficiência de qual das enzimas a seguir:", opts: ["β-Galactosidase.", "Esfingomielinase.", "Ceramidase.", "Hexosaminidase A.", "β-Glicosidase."], answer: 3, explanation: "A doença de Tay-Sachs é causada por deficiência da hexosaminidase A, levando ao acúmulo de GM2." },
+        { topic: "Lipoproteínas", text: "19. Qual das lipoproteínas plasmáticas é melhor descrita como: sintetizada na mucosa intestinal, contendo alta concentração de triacilglicerol e responsável pelo transporte de lipídeos da dieta pela circulação?", opts: ["Quilomícrons.", "Lipoproteína de alta densidade.", "Lipoproteína de densidade intermediária.", "Lipoproteína de baixa densidade.", "Lipoproteína de densidade muito baixa."], answer: 0, explanation: "Os quilomícrons transportam lipídeos exógenos da dieta." },
+        { topic: "Lipoproteínas", text: "20. Qual das lipoproteínas plasmáticas é melhor descrita como: sintetizada no fígado, contendo alta concentração de triacilglicerol e eliminada da circulação principalmente pelos tecidos adiposo e muscular?", opts: ["Quilomícrons.", "Lipoproteína de alta densidade.", "Lipoproteína de densidade intermediária.", "Lipoproteína de baixa densidade.", "Lipoproteína de densidade muito baixa."], answer: 4, explanation: "A VLDL (lipoproteína de densidade muito baixa) é sintetizada no fígado e fornece ácidos graxos aos tecidos periféricos." },
+        { topic: "Lipoproteínas", text: "21. Qual das lipoproteínas plasmáticas é melhor descrita como: formada na circulação pela remoção de triacilglicerol das lipoproteínas de densidade muito baixa, contém colesterol captado da lipoproteína de alta densidade e entrega o colesterol para os tecidos extra-hepáticos?", opts: ["Quilomícrons.", "Lipoproteína de alta densidade.", "Lipoproteína de densidade intermediária.", "Lipoproteína de baixa densidade.", "Lipoproteína de densidade muito baixa."], answer: 3, explanation: "A LDL (lipoproteína de baixa densidade) é a principal transportadora de colesterol para os tecidos." },
+        { topic: "Pós-prandial", text: "22. Qual das seguintes estará elevada na corrente sanguínea cerca de 2 horas após a ingestão de uma refeição rica em gordura?", opts: ["Quilomícrons.", "Lipoproteína de alta densidade.", "Corpos cetônicos.", "Ácidos graxos não esterificados.", "Lipoproteína de muito baixa densidade."], answer: 0, explanation: "Os quilomícrons aparecem na circulação após a absorção de gorduras da dieta." },
+        { topic: "Pós-prandial tardio", text: "23. Qual das seguintes estará elevada na corrente sanguínea cerca de 4 horas após a ingestão de uma refeição rica em gordura?", opts: ["Quilomícrons.", "Lipoproteína de alta densidade.", "Corpos cetônicos.", "Ácidos graxos não esterificados.", "Lipoproteína de muito baixa densidade."], answer: 4, explanation: "Após a remoção dos quilomícrons, o fígado aumenta a secreção de VLDL." },
+        { topic: "Transporte reverso", text: "24. Qual dos processos a seguir NÃO está envolvido no efluxo de colesterol dos tecidos extra-hepáticos e na entrega do colesterol para o fígado para excreção através da HDL?", opts: ["Efluxo de colesterol dos tecidos para pré-β HDL através de ABCA1.", "Esterificação do colesterol a éster de colesteril pela LCAT, formando HDL3.", "Transferência de éster de colesteril do HDL para VLDL, IDL e LDL pela ação da proteína de transferência de éster de colesteril (CETP).", "Efluxo de colesterol dos tecidos para HDL3 através de SR-B1 e ABCG1.", "Captação seletiva de éster de colesterila a partir de HDL2 pelo fígado através de SR-B1."], answer: 2, explanation: "A CETP transfere éster de colesteril da HDL para VLDL/LDL, o que não favorece diretamente a excreção hepática, mas sim o retorno a tecidos periféricos." },
+        { topic: "Quilomícrons", text: "25. Qual das seguintes afirmações sobre os quilomícrons está CORRETA?", opts: ["Os quilomícrons são produzidos dentro das células intestinais e secretados na linfa, onde eles adquirem as apolipoproteínas B e C.", "O núcleo dos quilomícrons contém triacilglicerol e fosfolipídeos.", "A enzima lipase sensível a hormônio atua sobre os quilomícrons liberando ácidos graxos dos triacilgliceróis quando eles estão ligados à superfície das células endoteliais nos capilares sanguíneos.", "Os remanescentes de quilomícrons diferem dos quilomícrons por serem menores e por conter uma proporção menor de triacilglicerol e uma maior proporção de colesterol.", "Os quilomícrons são captados pelo fígado."], answer: 3, explanation: "Os remanescentes de quilomícrons são enriquecidos em colesterol e removidos pelo fígado." },
+        { topic: "Biossíntese colesterol", text: "26. Qual das seguintes afirmações sobre a biossíntese do colesterol é a CORRETA?", opts: ["A etapa limitante da velocidade é a formação de 3-hidroxi-3-metilglutaril-CoA (HMG-CoA) pela enzima HMG-CoA-sintase.", "A síntese ocorre no citosol das células.", "Todos os átomos de carbono do colesterol sintetizado são originários de acetil-CoA.", "O esqualeno é o primeiro intermediário cíclico da via.", "O substrato inicial é o mevalonato."], answer: 2, explanation: "Todos os carbonos do colesterol derivam do acetil-CoA. A etapa limitante é a HMG-CoA redutase." },
+        { topic: "Estatinas", text: "27. A classe de fármacos chamada de estatinas tem-se revelado muito eficaz contra a hipercolesterolemia. Esses medicamentos reduzem os níveis de colesterol plasmático por:", opts: ["Prevenir a absorção de colesterol do intestino.", "Aumentar a excreção de colesterol do organismo através da conversão a ácidos biliares.", "Inibir a conversão de 3-hidroxi-3-metilglutaril-CoA a mevalonato na via de biossíntese de colesterol.", "Aumentar a velocidade de degradação da 3-hidroxi-3-metilglutaril-CoA-redutase.", "Estimular a atividade do receptor de LDL no fígado."], answer: 2, explanation: "As estatinas são inibidores competitivos da HMG-CoA redutase." },
+        { topic: "Ácidos biliares", text: "28. Qual das seguintes afirmações sobre os ácidos biliares (ou sais biliares) está INCORRETA:", opts: ["Os ácidos biliares primários são sintetizados no fígado a partir de colesterol.", "Os ácidos biliares são necessários para a digestão das gorduras pela lipase pancreática.", "Os ácidos biliares secundários são produzidos por modificação dos ácidos biliares primários no fígado.", "Os ácidos biliares facilitam a absorção dos produtos da digestão lipídica no jejum.", "Os ácidos biliares são reciclados entre o fígado e o intestino delgado na circulação êntero-hepática."], answer: 2, explanation: "Os ácidos biliares secundários são produzidos por modificação bacteriana no intestino, não no fígado." },
+        { topic: "Hipercolesterolemia", text: "29. Um homem de 35 anos com hipercolesterolemia grave tem história familiar de morte de jovens com doença cardíaca e acidente vascular cerebral. Qual dos seguintes genes, provavelmente, é o comprometido?", opts: ["Apolipoproteína E.", "Receptor de LDL.", "Lipase lipoproteica.", "PCSK9.", "LCAT."], answer: 1, explanation: "Mutação no receptor de LDL causa hipercolesterolemia familiar grave." },
+        { topic: "PCSK9", text: "30. A proteína recentemente descoberta, proprotein-a-convertase-subtilisina/kexina tipo 9 (PCSK9), foi identificada como um alvo em potencial para fármacos antiaterogênicos PORQUE:", opts: ["Diminui o número de receptores LDL expostos na superfície celular, de forma que a captação de LDL é reduzida, e os níveis de colesterol sanguíneo aumentam.", "Inibe a ligação de apoB ao receptor de LDL, bloqueando, assim, a captação da lipoproteína e aumentando os níveis de colesterol sanguíneo.", "Aumenta a absorção de colesterol intestinal.", "Previne a degradação de colesterol a ácidos biliares no fígado.", "Aumenta a síntese e a secreção de VLDL no fígado, levando ao aumento da formação de LDL no sangue."], answer: 0, explanation: "PCSK9 promove a degradação lisossomal do receptor LDL, reduzindo a captação de LDL. Inibidores de PCSK9 aumentam os receptores e diminuem o LDL." }
+    ];
+
+    // ======================= SEÇÃO VI – METABOLISMO DE PROTEÍNAS E AMINOÁCIDOS (19 questões, corrigidas) =======================
+    const proteinQuestions = [
+        { topic: "Aminoácidos", text: "1. Selecione a afirmativa a seguir que está INCORRETA:", opts: ["Δ¹-Pirrolina-5-carboxilato é um intermediário tanto na biossíntese quanto no catabolismo de L-prolina.", "Os tecidos humanos podem formar aminoácidos não essenciais na dieta a partir de intermediários anfibólicos e a partir de aminoácidos essenciais na dieta.", "O tecido hepático humano pode formar serina a partir do intermediário glicolítico 3-fosfoglicerato.", "A reação catalisada pela fenilalanina-hidroxilase interconverte fenilalanina e tirosina.", "O poder redutor da tetra-hidrobiopterina deriva do NADPH."], answer: 3, explanation: "A fenilalanina-hidroxilase é funcionalmente irreversível; não converte tirosina em fenilalanina." },
+        { topic: "Precursores", text: "2. Identifique o metabólito que NÃO serve como precursor dos aminoácidos essenciais na dieta.", opts: ["α-Cetoglutarato.", "3-Fosfoglicerato.", "Glutamato.", "Aspartato.", "Histamina."], answer: 4, explanation: "Histamina é um catabólito da histidina, não um precursor de aminoácidos essenciais." },
+        { topic: "Modificações", text: "3. Selecione a afirmativa a seguir que está INCORRETA:", opts: ["A selenocisteína está presente nos sítios ativos de certas enzimas humanas.", "A selenocisteína é inserida nas proteínas por um processo pós-traducional.", "A transaminação de α-cetoácidos da dieta pode substituir os aminoácidos essenciais na dieta, leucina, isoleucina e valina.", "A conversão de peptidil-prolina a peptidil-4-hidroxiprolina é acompanhada pela incorporação de oxigênio no succinato.", "Serina e glicina são interconvertidas em uma única reação em que participam derivados do tetra-hidrofolato."], answer: 1, explanation: "A selenocisteína é inserida durante a tradução (co-traducional), não pós-traducionalmente." },
+        { topic: "Degradação", text: "4. Selecione a resposta CORRETA: A primeira reação na degradação da maioria dos aminoácidos proteicos envolve a participação de:", opts: ["NAD+.", "Tiamina-pirofosfato (TPP).", "Piridoxal-fosfato.", "FAD.", "NAD+ e TPP."], answer: 2, explanation: "A transaminação dependente de piridoxal fosfato (PLP) é o passo inicial comum na degradação da maioria dos aminoácidos." },
+        { topic: "Transporte N", text: "5. Identifique o principal aminoácido contribuinte para o transporte de nitrogênio destinado à excreção como ureia:", opts: ["Alanina.", "Glutamina.", "Glicina.", "Lisina.", "Ornitina."], answer: 1, explanation: "A glutamina transporta nitrogênio amídico dos tecidos periféricos para o fígado." },
+        { topic: "Gliconeogênese", text: "6. Selecione a afirmativa a seguir que está INCORRETA:", opts: ["A síndrome de Angelman está associada à enzima ubiquitina E3-ligase defeituosa.", "Após uma refeição rica em proteína, os tecidos esplênicos liberam predominantemente aminoácidos de cadeia lateral ramificada, que são captados pelos tecidos musculares periféricos.", "A taxa da gliconeogênese hepática a partir de glutamina excede à de qualquer outro aminoácido.", "A conversão de um α-aminoácido, catalisada pela L-α-amino-oxidase, ao seu α-cetoácido correspondente é acompanhada pela liberação de NH4+.", "Os sinais e sintomas semelhantes ou mesmo idênticos podem estar associados com diferentes mutações do gene que codifica uma determinada enzima."], answer: 2, explanation: "O esqueleto de carbono da alanina é o que mais contribui para a gliconeogênese hepática, não a glutamina." },
+        { topic: "Degradação proteica", text: "7. Selecione a afirmativa a seguir que está INCORRETA:", opts: ["As sequencias PEST direcionam algumas proteínas para degradação rápida.", "ATP e ubiquitina, em geral, participam na degradação de proteínas associada à membrana e outras proteínas com períodos de meia-vida longos.", "As moléculas de ubiquitina são acopladas às proteínas-alvo através de ligações não α-peptídicas.", "Os descobridores da degradação proteica mediada por ubiquitina receberam o Prêmio Nobel.", "A degradação das proteínas marcadas com ubiquitina ocorre no proteossomo, uma macromolécula contendo múltiplas subunidades presente em todos os eucariotos."], answer: 1, explanation: "ATP e ubiquitina geralmente participam da degradação de proteínas de meia-vida curta e mal-formadas." },
+        { topic: "Ciclo da ureia", text: "8. Para os distúrbios metabólicos do ciclo da ureia, qual afirmativa está INCORRETA:", opts: ["A intoxicação por amônia é mais grave quando o bloqueio metabólico no ciclo da ureia ocorre antes da reação catalisada pela argininossuccinato-sintase.", "Os sintomas clínicos incluem deficiência intelectual e esquiva de alimentos ricos em proteínas.", "Os sinais clínicos pode incluir acidose.", "O aspartato fornece o segundo nitrogênio do argininossuccinato.", "A gestão da dieta concentra-se em uma dieta de baixa ingesta proteica, em pequenas refeições frequentes."], answer: 2, explanation: "Os distúrbios do ciclo da ureia cursam com alcalose, não acidose (incapacidade de excretar NH4+ leva a alcalose)." },
+        { topic: "Glutamina/glutamato", text: "9. Selecione a afirmativa a seguir que está INCORRETA:", opts: ["Uma função metabólica da glutamina é sequestrar nitrogênio na forma não tóxica.", "A glutamato-desidrogenase hepática é alostericamente inibida por ATP e ativada por ADP.", "A ureia é formada tanto a partir da amônia absorvida produzida por bactérias entéricas quanto a partir da amônia gerada pela atividade metabólica tecidual.", "A ação conjunta da glutamato-desidrogenase e da glutamato-aminotransferase pode ser denominada transdesaminação.", "O fumarato gerado durante a biossíntese de argininossuccinato forma oxalacetato em reações mitocondriais catalisadas sucessivamente pela fumarase e pela malato-desidrogenase."], answer: 4, explanation: "O fumarato é convertido em oxalacetato no citosol (fumarase citosólica e malato-DH citosólica) durante o ciclo da ureia." },
+        { topic: "Precursores", text: "10. Selecione a afirmativa a seguir que está INCORRETA:", opts: ["A treonina fornece a porção tioetanol para biossíntese da coenzima A.", "A histamina surge pela descarboxilação da histidina.", "A ornitina serve como precursor de espermina e de espermidina.", "A serotonina e a melatonina são metabólitos de triptofano.", "Glicina, arginina e metionina, cada uma, contribuem para a biossíntese de creatina."], answer: 0, explanation: "A serina (não treonina) fornece a porção tioetanol da coenzima A." },
+        { topic: "Neurotransmissores", text: "11. Seleciona a afirmativa a seguir que está INCORRETA:", opts: ["A creatinina excretada é uma função da massa muscular e pode ser utilizada para determinar se um paciente forneceu uma amostra completa de urina em 24 horas.", "Muitos fármacos e catabólitos de fármacos são excretados na urina como conjugados de glicina.", "O principal destino metabólico não proteico da metionina é a conversão a S-adenosilmetionina.", "A concentração de histamina no hipotálamo cerebral exibe um ritmo circadiano.", "A descarboxilação da glutamina forma o neurotransmissor inibidor GABA (γ-aminobutirato)."], answer: 4, explanation: "GABA é formado por descarboxilação do glutamato, não da glutamina." },
+        { topic: "Modificações", text: "12. O que distingue as vias pelas quais os aminoácidos seguintes aparecem em proteínas humanas: 5-Hidroxilisina, γ-Carboxiglutamato, Selenocisteína?", opts: ["5-Hidroxilisina e γ-carboxiglutamato são modificações pós-traducionais; selenocisteína é incorporada cotraducionalmente via tRNAsec.", "Todas são modificações pós-traducionais.", "Todas são codificadas diretamente no DNA.", "Apenas selenocisteína é uma modificação.", "γ-carboxiglutamato é a única essencial para coagulação."], answer: 0, explanation: "5-hidroxilisina e γ-carboxiglutamato resultam de modificações pós-traducionais; selenocisteína é inserida durante a tradução." },
+        { topic: "Evolução", text: "13. Qual vantagem evolucionária pode ser adquirida pelo fato de que certos aminoácidos são essenciais na dieta para os seres humanos?", opts: ["Economia de energia: a perda de genes para biossíntese de aminoácidos abundantes na dieta poupa energia e recursos.", "Maior flexibilidade metabólica.", "Síntese mais rápida de proteínas.", "Melhor armazenamento de nitrogênio.", "Permite maior variabilidade genética."], answer: 0, explanation: "A perda de genes desnecessários quando o aminoácido é obtido na dieta confere vantagem evolutiva por economia de energia." },
+        { topic: "Glutamato-DH", text: "14. Como você explicaria o fato de que defeitos metabólicos que resultam na ausência completa da atividade da glutamato-desidrogenase não tenham sido detectados?", opts: ["É letal na embriogênese; a enzima desempenha papéis centrais na conexão entre metabolismo de carbono e nitrogênio.", "A enzima é redundante.", "A deficiência é assintomática.", "O gene está no cromossomo Y.", "Só afeta plantas."], answer: 0, explanation: "A glutamato-desidrogenase é crucial para a homeostase do nitrogênio e ligação com o ciclo de Krebs; ausência completa seria incompatível com a vida." },
+        { topic: "Hemoproteínas", text: "15. Qual das seguintes NÃO é uma hemoproteína?", opts: ["Mioglobina.", "Citocromo c.", "Catalase.", "Citocromo P450.", "Albumina."], answer: 4, explanation: "Albumina não contém grupo heme." },
+        { topic: "Porfirias", text: "16. Um homem de 30 anos apresentou um histórico clínico de dor abdominal intermitente e episódios de confusão e problemas psiquiátricos. Os testes laboratoriais revelaram aumento de δ-aminolevulinato e porfobilinogênio na urina. A análise gênica revelou uma mutação no gene da uroporfirinogênio-sintase I (porfobilinogênio-desaminase). O diagnóstico provável foi:", opts: ["Porfiria aguda intermitente.", "Anemia sideroblástica ligado ao X.", "Porfiria eritroblástica congênita.", "Porfiria cutânea tardia.", "Porfiria variegata."], answer: 0, explanation: "Déficit na porfobilinogênio-desaminase (PBGD) → Porfiria aguda intermitente." },
+        { topic: "Bilirrubina", text: "17. Seleciona a afirmativa a seguir que está INCORRETA:", opts: ["A bilirrubina é um tetrapirrol cíclico.", "A bilirrubina ligada à albumina é transportada ao fígado.", "Altos níveis de bilirrubina podem causar dano ao cérebro de recém-nascidos.", "A bilirrubina contém grupos metil e vinil.", "A bilirrubina não contém ferro."], answer: 0, explanation: "A bilirrubina é um tetrapirrol linear, não cíclico." },
+        { topic: "Icterícia", text: "18. Uma mulher de 62 anos apresenta intensa icterícia, que aumentou constantemente durante os últimos 3 meses. Ela relatou um histórico de dor abdominal superior grave irradiando para as costas, e perda de peso considerável. Fezes claras. Nível muito alto de bilirrubina direta, ALT levemente alterada, fosfatase alcalina significativamente elevada. Ultrassom sem evidência de cálculos biliares. Diagnóstico mais provável?", opts: ["Síndrome de Gilbert.", "Anemia hemolítica.", "Síndrome Crigler-Najjar tipo 1.", "Carcinoma de pâncreas.", "Hepatite infecciosa."], answer: 3, explanation: "Icterícia obstrutiva com dor abdominal, perda de peso e fezes claras sugere carcinoma de pâncreas." },
+        { topic: "Síntese do heme", text: "19. O que sinaliza a ocorrência de síntese do heme?", opts: ["Disponibilidade de ferro livre sinaliza potencial para síntese; regulação alvo na ALA-sintase.", "Aumento de AMPc.", "Ativação da porfobilinogênio-desaminase.", "Baixos níveis de glicose.", "Aumento de NADPH."], answer: 0, explanation: "A biossíntese do heme é regulada pela disponibilidade de ferro, atuando na δ-aminolevulinato-sintase (ALA-sintase)." }
+    ];
+// ======================= NOVAS PERGUNTAS DAS IMAGENS =======================
+const newQuestions = [
+    // Pergunta 1 (proteínas/aminoácidos)
+    { topic: "Ciclo da ureia", text: "Qual dos seguintes aminoácidos transporta a maior parte do azoto para excreção no ciclo da ureia?", opts: ["Alanina", "Glicina", "Lisina", "Glutamina", "Ornitina"], answer: 3, explanation: "A glutamina transporta o azoto amídico dos tecidos periféricos para o fígado, onde é convertida em ureia." },
+    
+    // Pergunta 2 (proteínas/aminoácidos) - FALSA
+    { topic: "Ciclo da ureia", text: "Relativamente aos distúrbios metabólicos do ciclo da ureia, qual das seguintes afirmações é FALSA?", opts: ["A intoxicação por amônio é mais grave quando o bloqueio ocorre antes da reação da síntase de argininosuccinato.", "Os sintomas clínicos incluem atraso mental e evicção de alimentos ricos em proteínas.", "Os sinais clínicos podem incluir acidose.", "O aspartato fornece o segundo azoto da ureia.", "O tratamento dietético foca-se numa dieta pobre em proteínas, ingerida em pequenas refeições frequentes."], answer: 2, explanation: "Os distúrbios do ciclo da ureia cursam tipicamente com alcalose respiratória (devido à hiperventilação central estimulada pelo amónio) e não com acidose." },
+    
+    // Pergunta 3 (lipídeos)
+    { topic: "Estatinas", text: "As estatinas são eficazes contra a hipercolesterolemia porque inibem:", opts: ["A absorção intestinal de lípidos.", "A conversão de HMG-CoA em mevalonato.", "A atividade do recetor de LDL.", "A síntese de ácidos biliares primários.", "A degradção da redutase do HMG-CoA."], answer: 1, explanation: "As estatinas são inibidores competitivos da HMG-CoA redutase, enzima que converte HMG-CoA em mevalonato." },
+    
+    // Pergunta 4 (colesterol)
+    { topic: "Biossíntese do colesterol", text: "Na biossíntese do colesterol, qual destas premissas é verdadeira?", opts: ["O substrato inicial é o mevalonato.", "O processo ocorre integralmente nas mitocôndrias.", "O esqualeno é o primeiro composto cíclico.", "Todos os carbonos do colesterol derivam do acetil-CoA.", "A síntese do HMG-CoA é a enzima limitante da via."], answer: 3, explanation: "Todos os carbonos do colesterol derivam do acetil-CoA. A etapa limitante é a HMG-CoA redutase, e não a sintase." },
+    
+    // Pergunta 5 (transporte reverso colesterol)
+    { topic: "Transporte de colesterol", text: "O efluxo de colesterol para a HDL NÃO envolve:", opts: ["ABCA1 e pré-beta HDL.", "Ação da LCAT para formar HDL3.", "Recetores SR-B1 no fígado.", "ABCG1 e HDL3.", "Proteína de transferência de ésteres de colesterol (CETP) na entrega direta ao fígado."], answer: 4, explanation: "A CETP transfere ésteres de colesterol da HDL para as VLDL/LDL, tratando-se de uma via de transporte indireto e não de uma entrega direta ao fígado." },
+    
+    // Pergunta 6 (precursores aminoácidos)
+    { topic: "Aminoácidos", text: "Identifique o composto que não é precursor de aminoácidos nutricionalmente não-essenciais:", opts: ["Aspartato", "Glutamato", "Histamina", "3-Fosfoglicerato", "Alfa-Cetoglutarato"], answer: 2, explanation: "A histamina é um produto do catabolismo (descarboxilação) da histidina, não sendo precursora de aminoácidos." },
+    
+    // Pergunta 7 (síntese AG)
+    { topic: "Síntese de ácidos gordos", text: "A síntese de ácidos gordos tem como produto principal:", opts: ["Oleato", "Acetil-CoA", "Malonil-CoA", "Palmitato", "Palmitoil-CoA"], answer: 3, explanation: "O complexo da sintase dos ácidos gordos (FAS) sintetiza o palmitato (C16:0) como produto final livre." },
+    
+    // Pergunta 8 (regulação ACC)
+    { topic: "Regulação da síntese AG", text: "A inativação da acetil-CoA carboxilase ocorre preferencialmente quando:", opts: ["O transporte de ácidos tricarboxílicos está ativado.", "Existem níveis elevados de citrato no citosol.", "A enzima encontra-se fosforilada.", "Os níveis de palmitoil-CoA são reduzidos.", "A enzima assume a sua conformação polimérica."], answer: 2, explanation: "A acetil-CoA carboxilase é inativada por fosforilação (estimulada pela AMPK/glucagon) e ativada por desfosforilação (insulina)." },
+    
+    // Pergunta 9 (malonil-CoA)
+    { topic: "Regulação do metabolismo", text: "O malonil-CoA regula o metabolismo lipídico ao:", opts: ["Estimular a CPT-II.", "Inibir a síntese de acil-CoA.", "Ativar a lípase sensível às hormonas.", "Inibir a carnitina-palmitoil transferase-I.", "Facilitar a translocação de carnitina."], answer: 3, explanation: "O malonil-CoA é um potente inibidor alostérico da CPT-I, impedindo a entrada de ácidos gordos na mitocôndria para a β-oxidação." },
+    
+    // Pergunta 10 (β-oxidação)
+    { topic: "β-oxidação", text: "A oxidação completa (beta-oxidação) do ácido palmítico (C16) produz:", opts: ["8 Acetil-CoA, 8 NADH e 8 FADH₂", "7 Acetil-CoA, 7 NADH e 7 FADH₂", "8 Acetil-CoA, 7 NADH e 7 FADH₂", "8 Acetil-CoA, 8 NADH e 7 FADH₂", "7 Acetil-CoA, 8 NADH e 7 FADH₂"], answer: 2, explanation: "O palmitato (C16) requer 7 ciclos de β-oxidação, gerando 7 NADH, 7 FADH₂ e 8 moléculas de acetil-CoA." },
+    
+    // Pergunta 11 (lipase hormono-sensível)
+    { topic: "Lipólise", text: "A lípase hormono-sensível é inibida por:", opts: ["Adrenalina", "Glicagina", "Vasopressina", "Insulina", "ACTH"], answer: 3, explanation: "A insulina inibe a lípase hormono-sensível através da sua desfosforilação, bloqueando a lipólise." },
+    
+    // Pergunta 12 (lipoproteínas)
+    { topic: "Lipoproteínas", text: "A lipoproteína sintetizada no fígado e rica em triacilglicerídeos é a:", opts: ["LDL", "HDL", "Quilomícron", "VLDL", "IDL"], answer: 3, explanation: "A VLDL é sintetizada pelo fígado para transportar os triacilgliceróis endógenos para os tecidos periféricos." },
+
+    // Pergunta 13 (corpos cetónicos)
+    { topic: "Cetogénese", text: "O fígado é o principal local de produção de corpos cetónicos (acetoacetato e 3-hidroxibutirato), mas não consegue utilizá-los como fonte de energia PORQUE:", opts: ["Carece da enzima líase do HMG-CoA necessária para a sua clivagem.", "Não possui transportadores de membrana para a captação de acetoacetato.", "Carece da enzima transferase do succinil-CoA-acetoacetato CoA (tioforase), necessária para a sua ativação.", "A oxidação de corpos cetónicos é inibida por altos níveis de glicagina no estado de jejum.", "O fígado consome apenas ácidos gordos livres para poupar corpos cetónicos para o cérebro."], answer: 2, explanation: "O fígado não possui a enzima tioforase (transferase do succinil-CoA), impossibilitando a conversão de acetoacetato em acetoacetil-CoA, o que impede o consumo local dos corpos cetónicos que ele próprio produz." }
+];
+
+
+let allQuestions = [...lipidQuestions, ...proteinQuestions, ...newQuestions];
+
+    // Embaralhar (ordem aleatória)
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    let shuffledQuestions = [];
+    let currentIndex = 0;
+    let userScore = 0;
+    let wrongCount = 0;
+    let answered = false;
+
+    // DOM elements
+    const quizMain = document.getElementById('quizMain');
+    const resultDiv = document.getElementById('resultArea');
+    const progressFill = document.getElementById('progressFill');
+    const qCounterSpan = document.getElementById('qCounter');
+    const qTopicSpan = document.getElementById('qTopic');
+    const qTextDiv = document.getElementById('qText');
+    const optionsDiv = document.getElementById('optionsArea');
+    const feedbackDiv = document.getElementById('feedbackMsg');
+    const nextBtn = document.getElementById('nextBtn');
+    const scoreInlineSpan = document.getElementById('scoreInline');
+
+    function updateProgress() {
+        const percent = ((currentIndex + 1) / shuffledQuestions.length) * 100;
+        progressFill.style.width = `${percent}%`;
+        qCounterSpan.innerText = `Pergunta ${currentIndex+1} de ${shuffledQuestions.length}`;
+    }
+
+    function updateScoreText() {
+        scoreInlineSpan.innerHTML = `✔️ ${userScore} &nbsp; ❌ ${wrongCount}`;
+    }
+
+    function renderCurrentQuestion() {
+        const q = shuffledQuestions[currentIndex];
+        qTopicSpan.innerText = q.topic;
+        qTextDiv.innerText = q.text;
+        optionsDiv.innerHTML = '';
+        const letters = ['A', 'B', 'C', 'D', 'E'];
+        q.opts.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerHTML = `<span class="opt-letter">${letters[idx]}</span><span>${opt}</span>`;
+            btn.addEventListener('click', () => selectOption(idx));
+            optionsDiv.appendChild(btn);
+        });
+        feedbackDiv.style.display = 'none';
+        feedbackDiv.className = 'feedback';
+        nextBtn.style.display = 'none';
+        answered = false;
+    }
+
+    function selectOption(selectedIdx) {
+        if (answered) return;
+        answered = true;
+        const q = shuffledQuestions[currentIndex];
+        const btns = document.querySelectorAll('.opt-btn');
+        btns.forEach(btn => btn.disabled = true);
+        const correctIdx = q.answer;
+        btns[correctIdx].classList.add('correct');
+        const isCorrect = (selectedIdx === correctIdx);
+        if (isCorrect) {
+            userScore++;
+            feedbackDiv.classList.add('correct');
+            feedbackDiv.innerHTML = `✅ Correto! ${q.explanation}`;
+        } else {
+            wrongCount++;
+            btns[selectedIdx].classList.add('wrong');
+            feedbackDiv.classList.add('wrong');
+            const correctLetter = String.fromCharCode(65 + correctIdx);
+            feedbackDiv.innerHTML = `❌ Incorreto. Resposta certa: ${correctLetter}. ${q.explanation}`;
+        }
+        updateScoreText();
+        feedbackDiv.style.display = 'block';
+        nextBtn.style.display = 'block';
+    }
+
+    function nextQuestion() {
+        if (currentIndex + 1 < shuffledQuestions.length) {
+            currentIndex++;
+            renderCurrentQuestion();
+            updateProgress();
+        } else {
+            finishQuiz();
+        }
+    }
+
+    function finishQuiz() {
+        quizMain.style.display = 'none';
+        resultDiv.style.display = 'block';
+        const percent = Math.round((userScore / shuffledQuestions.length) * 100);
+        document.getElementById('finalPercent').innerHTML = `${percent}%`;
+        document.getElementById('finalCorrect').innerText = userScore;
+        document.getElementById('finalWrong').innerText = wrongCount;
+        let msg = '';
+        if (percent >= 85) msg = 'Excelente domínio do metabolismo lipídico e de aminoácidos!';
+        else if (percent >= 65) msg = 'Bom desempenho! Reveja alguns tópicos para consolidar.';
+        else msg = 'Revise os ciclos da β-oxidação, lipoproteínas e metabolismo do nitrogênio.';
+        document.getElementById('resultMsg').innerText = msg;
+    }
+//[...lipidQuestions, ...proteinQuestions, ...newQuestions]
+    function restartQuiz() {
+        shuffledQuestions = shuffleArray([...lipidQuestions, ...proteinQuestions, ...newQuestions]);
+        currentIndex = 0;
+        userScore = 0;
+        wrongCount = 0;
+        answered = false;
+        updateScoreText();
+        quizMain.style.display = 'block';
+        resultDiv.style.display = 'none';
+        renderCurrentQuestion();
+        updateProgress();
+    }
+
+    nextBtn.addEventListener('click', nextQuestion);
+    document.getElementById('restartBtn').addEventListener('click', restartQuiz);
+
+    // Inicialização
+    shuffledQuestions = shuffleArray([...lipidQuestions, ...proteinQuestions, ...newQuestions]);
+    renderCurrentQuestion();
+    updateProgress();
+    updateScoreText();
+</script>
+</body>
+</html>
