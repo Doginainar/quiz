@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Quiz Harper's - Metabolismo dos Lipídeos & Proteínas/Aminoácidos (Corrigido)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            background: #f0f4f9;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #1a2c3e;
+        }
+        .quiz-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 36px;
+            box-shadow: 0 16px 32px rgba(0,0,0,0.08);
+            overflow: hidden;
+            padding: 1.8rem 2rem 2rem;
+        }
+        @media (max-width: 600px) {
+            .quiz-container { padding: 1.2rem; }
+        }
+        .progress-wrapper {
+            margin-bottom: 1.5rem;
+        }
+        .progress-bar-bg {
+            background: #e2e8f0;
+            height: 6px;
+            border-radius: 8px;
+        }
+        .progress-fill {
+            background: #2c7a5e;
+            height: 6px;
+            border-radius: 8px;
+            width: 0%;
+            transition: width 0.25s ease;
+        }
+        .q-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 0.75rem;
+        }
+        .q-counter {
+            font-size: 0.8rem;
+            font-weight: 500;
+            background: #eef2f8;
+            padding: 4px 14px;
+            border-radius: 40px;
+            color: #2c4f6e;
+        }
+        .q-topic {
+            font-size: 0.75rem;
+            background: #e0e9f2;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-weight: 500;
+            color: #1f5068;
+        }
+        .q-text {
+            font-size: 1.3rem;
+            font-weight: 550;
+            line-height: 1.45;
+            margin: 1rem 0 1.3rem;
+            color: #0b2f44;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+        }
+        .opt-btn {
+            background: white;
+            border: 1px solid #dce5ef;
+            border-radius: 24px;
+            padding: 0.85rem 1.2rem;
+            font-size: 0.94rem;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.12s;
+            font-family: inherit;
+            color: #1a2c3e;
+        }
+        .opt-btn:hover:not(:disabled) {
+            background: #fafcff;
+            border-color: #94a9c2;
+            transform: translateY(-1px);
+        }
+        .opt-letter {
+            font-weight: 700;
+            background: #eef2f8;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 30px;
+            font-size: 0.85rem;
+        }
+        .opt-btn.correct {
+            background: #e0f2ea;
+            border-color: #2c7a5e;
+        }
+        .opt-btn.correct .opt-letter {
+            background: #c8e6db;
+            color: #145c46;
+        }
+        .opt-btn.wrong {
+            background: #feeceb;
+            border-color: #cf7a7a;
+        }
+        .opt-btn.wrong .opt-letter {
+            background: #fad8d8;
+            color: #b14b4b;
+        }
+        .opt-btn:disabled {
+            cursor: default;
+        }
+        .feedback {
+            margin: 1rem 0 1.2rem;
+            padding: 0.9rem 1.3rem;
+            border-radius: 24px;
+            font-size: 0.9rem;
+            line-height: 1.45;
+            display: none;
+            white-space: pre-line; /* 👈 Add this line */
+
+        }
+        .feedback.correct {
+            background: #e0f2ea;
+            border-left: 5px solid #2c7a5e;
+            color: #135a45;
+        }
+        .feedback.wrong {
+            background: #feeceb;
+            border-left: 5px solid #cf7a7a;
+            color: #9b3e3e;
+        }
+        .nav-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.3rem;
+        }
+        .score-inline {
+            font-size: 0.85rem;
+            font-weight: 500;
+            background: #f0f4f9;
+            padding: 6px 16px;
+            border-radius: 40px;
+        }
+        .btn {
+            background: white;
+            border: 1px solid #cbdde9;
+            padding: 8px 22px;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.1s;
+            font-family: inherit;
+        }
+        .btn-primary {
+            background: #2c7a5e;
+            border-color: #2c7a5e;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #1e5f48;
+        }
+        .btn:hover {
+            background: #eef3fc;
+        }
+        .result-screen {
+            text-align: center;
+            padding: 1rem 0.5rem;
+        }
+        .final-score {
+            font-size: 4rem;
+            font-weight: 700;
+            color: #2c7a5e;
+            margin: 0.5rem 0;
+        }
+        .score-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+       .stat-card {
+            background: #f8fafd;
+            padding: 0.7rem 1.8rem;
+            border-radius: 48px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .green-txt { color: #2c7a5e; }
+        .red-txt { color: #c86363; }
+        button:active { transform: scale(0.97);}
+    </style>
+</head>
+<body>
+<div class="quiz-container" id="quizContainer">
+    <div id="quizMain">
+        <div class="progress-wrapper">
+            <div class="progress-bar-bg"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+        <div class="q-header">
+            <span class="q-counter" id="qCounter">Pergunta 1 de 49</span>
+            <span class="q-topic" id="qTopic">Carregando...</span>
+        </div>
+        <div class="q-text" id="qText"></div>
+        <div class="options" id="optionsArea"></div>
+        <div class="feedback" id="feedbackMsg"></div>
+        <div class="nav-row">
+            <div class="score-inline" id="scoreInline">✔️ 0 &nbsp; ❌ 0</div>
+            <button class="btn btn-primary" id="nextBtn" style="display: none;">Próxima →</button>
+        </div>
+    </div>
+    <div id="resultArea" style="display: none;">
+        <div class="result-screen">
+            <div class="final-score" id="finalPercent"></div>
+            <p style="color: #2c506d; margin-bottom: 0.2rem;" id="resultMsg"></p>
+            <div class="score-stats">
+                <div class="stat-card"><div class="stat-number green-txt" id="finalCorrect"></div><div class="stat-label">Corretas</div></div>
+                <div class="stat-card"><div class="stat-number red-txt" id="finalWrong"></div><div class="stat-label">Erradas</div></div>
+            </div>
+            <button class="btn btn-primary" id="restartBtn">🔄 Recomeçar (Ordem aleatória)</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+const anatomiaQuestions = [
+  // 1
+{
+  "topic": "Fígado",
+  "text": "1. Relativamente à anatomia do fígado, indica a afirmação falsa.",
+  "opts": [
+    "A) O lobo quadrado do fígado é limitado posteriormente pela porta hepática",
+    "B) Na face inferior ou visceral, anteriormente ao sulco longitudinal direito, encontra-se a fissura do ligamento redondo",
+    "C) As duas lâminas do ligamento coronário unem-se para originar os ligamentos triangulares esquerdo e direito",
+    "D) A impressão cardíaca no fígado é inconstante",
+    "E) A fissura do ligamento venoso situa-se à esquerda do lobo caudado de Spiegel"
+  ],
+  "answer": 1,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> O lobo quadrado situa-se na face inferior (visceral), sendo limitado lateralmente pelos sulcos longitudinais e <strong>posteriormente pela porta hepática</strong>.\n\nB) <strong>FALSA:</strong> A fissura do ligamento redondo (que contém o resquício da veia umbilical) situa-se na porção anterior do <strong>sulco longitudinal ESQUERDO</strong>. Anteriormente ao sulco longitudinal direito encontra-se a <strong>fossa da vesícula biliar</strong>.\n\nC) <strong>VERDADEIRA:</strong> O ligamento coronário é constituído por duas lâminas (superior e inferior) que se unem nas extremidades laterais do órgão para formar os <strong>ligamentos triangulares</strong> direito e esquerdo.\n\nD) <strong>VERDADEIRA:</strong> A <strong>impressão cardíaca</strong>, localizada na face superior do lobo esquerdo devido à relação com o coração através do diafragma, é considerada uma marca anatómica <strong>inconstante</strong>.\n\nE) <strong>VERDADEIRA:</strong> Na face posterior (vertebral), o lobo caudado de Spiegel ocupa a zona média, sendo limitado à direita pelo sulco da veia cava inferior e à <strong>esquerda pela fissura do ligamento venoso</strong> (canal de Arantius)."
+},
+ 
+  // 2
+{
+  "topic": "Rim",
+  "text": "2. Relativamente à anatomia do rim, indique a afirmação falsa.",
+  "opts": [
+    "A) O hilo renal apresenta duas proeminências, que são os tubérculos anterior e posterior.",
+    "B) A sua fáscia é constituída por uma lâmina anterior e outra posterior, que constituem a loca renal",
+    "C) A cabeça do pâncreas relaciona-se com uma pequena porção da face anterior do rim direito",
+    "D) O rim esquerdo, mais superior que o direito, relaciona-se inferiormente com a porção esquerda do cólon transverso, através da sua margem lateral",
+    "E) O polo inferior do rim esquerdo repousa sobre o músculo quadrado dos lombos"
+  ],
+  "answer": 0,
+  "explanation": "\n\nA) <strong>FALSA:</strong> O hilo renal, localizado na margem medial do rim, é delimitado por duas proeminências que são os <strong>tubérculos superior e inferior</strong>, e não anterior e posterior.\n\nB) <strong>VERDADEIRA:</strong> A fáscia renal desdobra-se nas <strong>lâminas anterior (pré-renal)</strong> e <strong>posterior (retro-renal)</strong>, que envolvem o rim e a glândula suprarrenal, constituindo a <strong>loca renal</strong>.\n\nC) <strong>VERDADEIRA:</strong> Entre as diversas relações da face anterior do rim direito, encontra-se de facto uma pequena porção da <strong>cabeça do pâncreas</strong>, situada entre a área da suprarrenal e a área duodenal.\n\nD) <strong>VERDADEIRA:</strong> O rim esquerdo é habitualmente <strong>mais superior</strong> que o direito; a sua margem lateral relaciona-se na porção inferior com o <strong>cólon transverso</strong> e a flexura esplénica.\n\nE) <strong>VERDADEIRA:</strong> O <strong>polo inferior</strong> de ambos os rins, incluindo o esquerdo, repousa sobre a parede muscular posterior, especificamente sobre os músculos <strong>psoas maior</strong> e <strong>quadrado dos lombos</strong>."
+},
+  
+  // 3
+
+{
+  "topic": "Funículo espermático",
+  "text": "3. Qual das seguintes estruturas não se encontra no interior das locas do funículo espermático?",
+  "opts": [
+    "A) Ducto deferente",
+    "B) Artéria deferencial",
+    "C) Artéria cremastérica",
+    "D) Plexo venoso testicular posterior",
+    "E) Plexo nervoso testicular"
+  ],
+  "answer": 2,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> O <strong>ducto deferente</strong> é o componente principal e central contido no interior das locas do funículo espermático.\n\nB) <strong>VERDADEIRA:</strong> A <strong>artéria deferencial</strong> (ramo da artéria vesículo-deferencial) situa-se na porção posterior do funículo, acompanhando e vascularizando o ducto deferente.\n\nC) <strong>FALSA:</strong> A <strong>artéria cremastérica</strong> (ou artéria funicular) origina-se na artéria epigástrica inferior e, embora penetre no canal inguinal, situa-se <strong>posteriormente à bainha fibrosa</strong> do funículo espermático, e não no seu interior.\n\nD) <strong>VERDADEIRA:</strong> O <strong>plexo venoso testicular posterior</strong> é constituído por veias situadas no interior do funículo, localizadas <strong>posteriormente ao ducto deferente</strong>.\n\nE) <strong>VERDADEIRA:</strong> O <strong>plexo nervoso testicular</strong>, formado pelos nervos do testículo e do epidídimo, acompanha os vasos e o ducto deferente através do funículo espermático."
+},
+
+  
+  // 4
+{
+  "topic": "Vias biliares",
+  "text": "4. Relativamente à anatomia das vias biliares, indique a afirmação verdadeira.",
+  "opts": [
+    "A) A face inferior do corpo da vesícula biliar relaciona-se com a parte descendente do duodeno",
+    "B) O ducto colédoco é formado por 3 porções",
+    "C) A vesícula biliar é constituída por 4 partes (fundo, corpo, colo e pelve)",
+    "D) O ducto cístico apresenta diversas bossas, separadas pelas pregas espirais, habitualmente triangulares, com duas margens aderentes",
+    "E) O ligamento cístico-cólico, inconstante, une a face inferior do colo da vesícula biliar à flexura hepática do cólon"
+  ],
+  "answer": 0,
+  "explanation": "A) <strong>VERDADEIRA:</strong> O corpo da vesícula biliar relaciona-se inferiormente com a face superior da <strong>parte descendente do duodeno</strong> e o cólon transverso [1].\n\nB) <strong>FALSA:</strong> O ducto colédoco possui <strong>4 partes</strong> (supraduodenal, retroduodenal, retropancreática e intraparietal), não <strong>3</strong> [2].\n\nC) <strong>FALSA:</strong> A vesícula biliar é habitualmente descrita como constituída por <strong>3 partes</strong> (fundo, corpo e colo); a \"pelve\" é apenas a porção mais desenvolvida do <strong>colo</strong> [1].\n\nD) <strong>FALSA:</strong> Segundo a sebenta, o ducto cístico apresenta bossas separadas por <strong>sulcos</strong> (que condicionam as <strong>pregas espirais de Heister</strong>), e não pelas pregas diretamente; adicionalmente, a descrição \"triangulares, com duas margens aderentes\" não consta nas fontes [3].\n\nE) <strong>FALSA:</strong> O ligamento cístico-cólico une a face inferior do <strong>corpo</strong> (e não do <strong>colo</strong>) da vesícula biliar à flexura hepática e parte descendente do duodeno [1]."
+},
+  
+  // 5
+
+{
+  "topic": "Laringe",
+  "text": "5. Relativamente à anatomia da laringe, indica a afirmação verdadeira.",
+  "opts": [
+    "A) As cartilagens aritnoideias são inconstantes",
+    "B) Os ligamentos glosso-epiglóticos encontram-se na espessura da prega glosso-epiglótica mediana",
+    "C) As pregas vocais encontram-se superiormente às pregas vestibulares",
+    "D) A membrana hio-epiglótica constitui um dos limites anteriores do espaço hio-tiro-epiglótico",
+    "E) A cartilagem interaritnoideia, constante, ocupa a espessura do ligamento crico-corniculado"
+  ],
+  "answer": 1,
+  "explanation": "\n\nA) <strong>FALSA:</strong> As <strong>cartilagens aritnoideias</strong> são cartilagens pares e <strong>constantes</strong> da laringe. Exemplos de cartilagens inconstantes são as sesamoideias e a interaritnoideia.\n\nB) <strong>VERDADEIRA:</strong> Os <strong>ligamentos glosso-epiglóticos</strong> são ligamentos fibro-elásticos que se encontram na espessura das pregas glosso-epiglóticas (mediana e laterais), estabelecendo a união entre a face anterior da epiglote e a raiz da língua.\n\nC) <strong>FALSA:</strong> No interior da laringe, as <strong>pregas vestibulares</strong> (cordas vocais falsas) situam-se <strong>superiormente</strong> às pregas vocais.\n\nD) <strong>FALSA:</strong> A <strong>membrana hio-epiglótica</strong> constitui o limite <strong>superior</strong> do espaço hio-tiro-epiglótico (também chamado de loca tiro-glosso-epiglótica). Os limites anteriores são a membrana tiro-hioideia e a cartilagem tiroideia.\n\nE) <strong>FALSA:</strong> A <strong>cartilagem interaritnoideia</strong>, embora ocupe a espessura do ligamento crico-corniculado, é classificada como uma estrutura <strong>inconstante</strong>."
+},
+
+  
+  // 6
+
+{
+  "topic": "Laringe (inervação)",
+  "text": "6. Qual dos seguintes músculos da laringe não é inervado pelo nervo laríngeo recorrente?",
+  "opts": [
+    "A) Músculo tiro-aritnoideu",
+    "B) Músculo aritnoideu transverso",
+    "C) Músculo crico-tiroideu",
+    "D) Músculo crico-aritnoideu posterior",
+    "E) Músculo crico-aritnoideu lateral"
+  ],
+  "answer": 2,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> O músculo <strong>tiro-aritnoideu</strong> é inervado pelo <strong>nervo laríngeo recorrente</strong>.\n\nB) <strong>VERDADEIRA:</strong> O músculo <strong>aritnoideu transverso</strong> é inervado pelo <strong>nervo laríngeo recorrente</strong>.\n\nC) <strong>FALSA:</strong> O músculo <strong>crico-tiroideu</strong> é a única exceção entre os músculos intrínsecos da laringe, sendo inervado pelo <strong>ramo externo do nervo laríngeo superior</strong> e não pelo recorrente.\n\nD) <strong>VERDADEIRA:</strong> O músculo <strong>crico-aritnoideu posterior</strong> é inervado pelo <strong>nervo laríngeo recorrente</strong>.\n\nE) <strong>VERDADEIRA:</strong> O músculo <strong>crico-aritnoideu lateral</strong> é inervado pelo <strong>nervo laríngeo recorrente</strong>."
+},
+  
+  // 7
+{
+  "topic": "Peritoneu",
+  "text": "7. Relativamente à anatomia do peritoneu, indica a afirmação falsa.",
+  "opts": [
+    "A) A base do mesoapêndice relaciona-se com a face medial do cego",
+    "B) O pavimento da bolsa omental é constituído pelo mesocólon transverso",
+    "C) A bolsa omental relaciona-se posteriormente com a veia cava inferior",
+    "D) Para anterior do vestíbulo da bolsa omental tem-se a face posterior do estômago",
+    "E) O peritoneu reveste os dois terços superiores das faces anterior e laterais da ampola retal"
+  ],
+  "answer": 3,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> O <strong>mesoapêndice</strong> tem a sua base na junção íleo-cecal, junto à <strong>face medial do cego</strong>.\n\nB) <strong>VERDADEIRA:</strong> O <strong>mesocólon transverso</strong> constitui o <strong>pavimento da bolsa omental</strong>.\n\nC) <strong>VERDADEIRA:</strong> A <strong>bolsa omental</strong> relaciona-se com o peritoneu que reveste a <strong>veia cava inferior</strong>.\n\nD) <strong>FALSA:</strong> O <strong>vestíbulo da bolsa omental</strong> é limitado anteriormente pelo <strong>omento menor</strong>. A face posterior do estômago limita a <strong>bolsa omental propriamente dita</strong>.\n\nE) <strong>VERDADEIRA:</strong> O peritoneu reveste apenas os <strong>dois terços superiores</strong> da ampola retal."
+},
+  
+  // 8
+{
+  "topic": "Sistema de orientação do útero",
+  "text": "8. Qual das seguintes estruturas faz parte do sistema de orientação do útero?",
+  "opts": [
+    "A) Ligamento transverso do colo do útero",
+    "B) Ligamento vésico-uterino",
+    "C) Ligamento útero-sagrado",
+    "D) Ligamento de Jean Louis Petit",
+    "E) Ligamento redondo do útero"
+  ],
+  "answer": 4,
+  "explanation": "\n\nA) <strong>FALSA:</strong> O <strong>ligamento transverso do colo</strong> (Mackenroth) integra o <strong>sistema de suspensão</strong>.\n\nB) <strong>FALSA:</strong> Os <strong>ligamentos vésico-uterinos</strong> pertencem ao <strong>sistema de suspensão</strong>.\n\nC) <strong>FALSA:</strong> Os <strong>ligamentos útero-sagrados</strong> fazem parte do <strong>sistema de suspensão</strong>.\n\nD) <strong>FALSA:</strong> O <strong>ligamento de Jean Louis Petit</strong> une os útero-sagrados, sendo do <strong>sistema de suspensão</strong>.\n\nE) <strong>VERDADEIRA:</strong> O <strong>sistema de orientação</strong> (anteversão/anteflexão) é formado pelos <strong>ligamentos redondos</strong> e largos."
+},
+  
+  // 9
+{
+  "topic": "Glândula parótida",
+  "text": "9. Qual das estruturas não faz parte das relações intrínsecas da glândula parótida?",
+  "opts": [
+    "A) Veia maxilar",
+    "B) Artéria maxilar",
+    "C) Nervo aurículo-temporal",
+    "D) Veia temporal superficial",
+    "E) Nódulos linfáticos subparotídeos"
+  ],
+  "answer": 4,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> A <strong>veia maxilar</strong> une-se à temporal superficial no interior da glândula.\n\nB) <strong>VERDADEIRA:</strong> A <strong>artéria maxilar</strong> origina-se no interior da parótida.\n\nC) <strong>VERDADEIRA:</strong> O <strong>nervo aurículo-temporal</strong> atravessa a massa glandular.\n\nD) <strong>VERDADEIRA:</strong> A <strong>veia temporal superficial</strong> penetra na glândula parótida.\n\nE) <strong>FALSA:</strong> Os nódulos <strong>subparotídeos</strong> são superficiais (externos), sendo relações <strong>extrínsecas</strong>."
+},
+  
+  // 10
+{
+  "topic": "Nervo mandibular",
+  "text": "10. Relativamente aos ramos terminais do nervo mandibular, qual não é um nervo terminal?",
+  "opts": [
+    "A) Nervo alveolar inferior",
+    "B) Nervo alveolar médio-superior",
+    "C) Nervo têmporo-bucal",
+    "D) Nervo aurículo-temporal",
+    "E) Nervo lingual"
+  ],
+  "answer": 1,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> O <strong>nervo alveolar inferior</strong> é um ramo terminal do <strong>V3</strong>.\n\nB) <strong>FALSA:</strong> O <strong>nervo alveolar médio-superior</strong> é um ramo do <strong>nervo maxilar (V2)</strong>.\n\nC) <strong>VERDADEIRA:</strong> O <strong>nervo têmporo-bucal</strong> é um ramo do tronco anterior do <strong>V3</strong>.\n\nD) <strong>VERDADEIRA:</strong> O <strong>nervo aurículo-temporal</strong> é um terminal do tronco posterior do <strong>V3</strong>.\n\nE) <strong>VERDADEIRA:</strong> O <strong>nervo lingual</strong> é um ramo terminal fundamental do <strong>mandibular (V3)</strong>."
+},
+  
+  // 11
+  {
+  "topic": "Nervo hipoglosso",
+  "text": "11. No tocante aos ramos do nervo hipoglosso, qual não é um ramo colateral do hipoglosso?",
+  "opts": [
+    "A) Nervo do músculo tiro-hioideu",
+    "B) Nervo do músculo génio-hioideu",
+    "C) Ramo descendente da ansa cervical",
+    "D) Nervo do músculo estilo-glosso",
+    "E) Nervo do músculo palato-glosso"
+  ],
+  "answer": 4,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> O nervo do <strong>músculo tiro-hioideu</strong> é um ramo colateral do nervo hipoglosso (XII).\n\nB) <strong>VERDADEIRA:</strong> O nervo do <strong>músculo génio-hioideu</strong> é também um ramo colateral deste nervo.\n\nC) <strong>VERDADEIRA:</strong> O <strong>ramo descendente do hipoglosso</strong> une-se ao ramo descendente do plexo cervical para formar a <strong>ansa cervical</strong> (ansa do hipoglosso).\n\nD) <strong>VERDADEIRA:</strong> O hipoglosso emite ramos para os músculos da língua, incluindo o <strong>músculo estilo-glosso</strong>, génio-glosso e hio-glosso.\n\nE) <strong>FALSA:</strong> O <strong>músculo palato-glosso</strong>, embora seja um músculo da língua, pertence funcionalmente ao palato mole e é inervado pelo <strong>nervo vago (X)</strong>, via plexo faríngeo."
+},
+  
+  // 12
+  {
+  "topic": "Nervo facial",
+  "text": "12. Relativamente à anatomia do nervo facial, indique a afirmação correta.",
+  "opts": [
+    "A) No meato auditivo interno, o nervo facial encontra-se anteriormente aos nervos vestibulares e inferiormente ao nervo coclear",
+    "B) Origina-se no sulco bulbo-pôntico, lateralmente ao foramen cego de Vicq d\\'Azyr",
+    "C) A corda do tímpano sai da cavidade timpânica pela sua parede póstero-inferior",
+    "D) A anastomose de Cruveilher consiste numa comunicação com o gânglio superior do nervo vago",
+    "E) O nervo intermédio de Wrisberg termina no ângulo póstero-inferior do gânglio geniculado"
+  ],
+  "answer": 3,
+  "explanation": "\n\nA) <strong>FALSA:</strong> No meato auditivo interno, o <strong>nervo facial</strong> situa-se superiormente ao nervo coclear.\n\nB) <strong>FALSA:</strong> O nervo facial origina-se no sulco bulbo-pôntico, mas a referência ao <strong>foramen cego</strong> (que é mediano) não é a descrição anatómica padrão para a sua origem lateral.\n\nC) <strong>FALSA:</strong> A <strong>corda do tímpano</strong> (ramo do VII) atravessa a cavidade timpânica mas a descrição da parede de saída nesta opção não está correta segundo as fontes.\n\nD) <strong>VERDADEIRA:</strong> A <strong>anastomose de Cruveilher</strong> é a comunicação estabelecida entre o nervo facial e o <strong>gânglio superior do nervo vago (X)</strong>.\n\nE) <strong>FALSA:</strong> O <strong>nervo intermédio de Wrisberg</strong> (porção sensitiva e vegetativa do VII) termina no <strong>gânglio geniculado</strong>, mas a precisão do ângulo póstero-inferior não consta como detalhe principal nas fontes."
+},
+  
+  // 13
+{
+  "topic": "Nervo oculomotor",
+  "text": "13. Qual dos seguintes não é um ramo do nervo oculomotor?",
+  "opts": [
+    "A) Nervo do músculo reto inferior",
+    "B) Nervo do músculo reto superior",
+    "C) Nervo do músculo oblíquo superior",
+    "D) Nervo do músculo oblíquo inferior",
+    "E) Nervo do músculo levantador da pálpebra superior"
+  ],
+  "answer": 2,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> O <strong>músculo reto inferior</strong> é inervado pelo ramo inferior do nervo oculomotor (III).\n\nB) <strong>VERDADEIRA:</strong> O <strong>músculo reto superior</strong> é inervado pelo ramo superior do nervo oculomotor.\n\nC) <strong>FALSA:</strong> O <strong>músculo oblíquo superior</strong> é inervado exclusivamente pelo <strong>nervo troclear (IV par craniano)</strong>.\n\nD) <strong>VERDADEIRA:</strong> O <strong>músculo oblíquo inferior</strong> recebe inervação do ramo inferior do nervo oculomotor.\n\nE) <strong>VERDADEIRA:</strong> O <strong>músculo levantador da pálpebra superior</strong> é inervado pelo ramo superior do nervo oculomotor."
+},
+
+  
+  // 14
+  
+{
+  "topic": "Nervo maxilar",
+  "text": "14. Qual das seguintes opções não corresponde a ramo(s) do nervo maxilar?",
+  "opts": [
+    "A) Nervo alveolar inferior",
+    "B) Nervo alveolar médio-superior",
+    "C) Nervo alveolar ântero-superior",
+    "D) Nervo ptérigo-palatino",
+    "E) Nervos alveolares póstero-superiores"
+  ],
+  "answer": 0,
+  "explanation": "\n\nA) <strong>FALSA:</strong> O <strong>nervo alveolar inferior</strong> é um ramo do <strong>nervo mandibular (V3)</strong>, e não do nervo maxilar.\n\nB) <strong>VERDADEIRA:</strong> O <strong>nervo alveolar médio-superior</strong> é um ramo colateral do nervo infra-orbitário, que por sua vez é continuação do <strong>nervo maxilar (V2)</strong>.\n\nC) <strong>VERDADEIRA:</strong> O <strong>nervo alveolar ântero-superior</strong> origina-se também no canal infra-orbitário, sendo ramo do <strong>maxilar</strong>.\n\nD) <strong>VERDADEIRA:</strong> O <strong>nervo ptérigo-palatino</strong> (ou ramos que ligam ao gânglio) é um ramo do <strong>nervo maxilar</strong>.\n\nE) <strong>VERDADEIRA:</strong> Os <strong>nervos alveolares póstero-superiores</strong> são ramos colaterais diretos do <strong>nervo maxilar</strong> na fossa ptérigo-palatina."
+},
+  
+  // 15
+{ 
+  "topic": "Carótida interna",
+  "text": "15. Relativamente à carótida interna, indique a afirmação correta.",
+  "opts": [
+    "A) A artéria carótico-timpânica é o ramo colateral extra-craniano",
+    "B) A artéria muscular superior irriga o músculo reto lateral",
+    "C) A artéria oftálmica origina-se ao nível dos processos clinóides médios",
+    "D) Os ramos extra-orbitários da artéria oftálmica são as artérias etmoidais, a artéria supra-orbitária, a artéria infra-orbitária, as artérias palpebrais e a artéria supratroclear",
+    "E) As artérias cerebral anterior, comunicante posterior e coroideia anterior são ramos terminais"
+  ],
+  "answer": 4,
+  "explanation": "\n\nA) <strong>FALSA:</strong> A artéria carótida interna <strong>não possui ramos colaterais no pescoço</strong> (extracranianos). A artéria carótico-timpânica é um ramo <strong>intrapetroso</strong> (intracraniano).\n\nB) <strong>FALSA:</strong> A artéria muscular superior (ramo da oftálmica) irriga os músculos reto superior, medial, oblíquo superior e levantador da pálpebra. O <strong>reto lateral</strong> é irrigado pela artéria lacrimal e pela <strong>artéria muscular inferior</strong>.\n\nC) <strong>FALSA:</strong> A artéria oftálmica origina-se ao nível dos <strong>processos clinóides anteriores</strong>.\n\nD) <strong>FALSA:</strong> A <strong>artéria infra-orbitária</strong> não é ramo da oftálmica, mas sim um ramo terminal da <strong>artéria maxilar</strong> (carótida externa).\n\nE) <strong>VERDADEIRA:</strong> Os ramos terminais da carótida interna são as artérias <strong>cerebral anterior</strong>, cerebral média, <strong>comunicante posterior</strong> e <strong>coroideia anterior</strong>."
+},
+  
+  // 16
+{
+  "topic": "Artéria subclávia",
+  "text": "16. Qual das seguintes não constitui um dos ramos pré-escalénicos da artéria subclávia?",
+  "opts": [
+    "A) Artéria vertebral",
+    "B) Artéria tiroideia inferior",
+    "C) Artéria cervical ascendente",
+    "D) Artéria escapular posterior",
+    "E) Artéria laríngea inferior"
+  ],
+  "answer": 3,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> A <strong>artéria vertebral</strong> é o primeiro ramo colateral da artéria subclávia, originando-se na sua porção pré-escalénica.\n\nB) <strong>VERDADEIRA:</strong> A <strong>artéria tiroideia inferior</strong> é um ramo do tronco tiro-bicérvico-escapular, que nasce na porção pré-escalénica.\n\nC) <strong>VERDADEIRA:</strong> A <strong>artéria cervical ascendente</strong> é também um ramo do tronco tiro-bicérvico-escapular (porção pré-escalénica).\n\nD) <strong>FALSA:</strong> A <strong>artéria escapular posterior</strong> (ou dorsal da escápula) é classificada como um ramo colateral <strong>interescalénico</strong>, originando-se habitualmente do tronco costo-cervical ou diretamente da subclávia entre os escalenos.\n\nE) <strong>VERDADEIRA:</strong> A <strong>artéria laríngea inferior</strong> é um ramo terminal da artéria tiroideia inferior, pertencendo portanto ao território vascular pré-escalénico."
+},
+  
+  // 17
+
+{
+  "topic": "Vascularização do duodeno",
+  "text": "17. Existe um ramo arterial no tubo digestivo que, pela sua relação próxima anatómica com a primeira porção do duodeno, pode, em caso de ulceração da parede posterior, originar uma hemorragia grave. Qual é a artéria que tem esta relação próxima com a face posterior da primeira porção do duodeno?",
+  "opts": [
+    "A) Artéria gástrica posterior",
+    "B) Artéria gastro-duodenal",
+    "C) Artéria gástrica esquerda",
+    "D) Artéria hepática acessória ireita",
+    "E) Artéria gastro-omental direita"
+  ],
+  "answer": 1,
+  "explanation": "\n\nA) <strong>FALSA:</strong> A artéria gástrica posterior vasculariza o fundo gástrico e situa-se superiormente ao duodeno.\n\nB) <strong>VERDADEIRA:</strong> A <strong>artéria gastro-duodenal</strong> (ramo da hepática comum) desce <strong>posteriormente à parte superior (1ª porção) do duodeno</strong>. Úlceras pépticas que penetram a parede posterior nesta zona podem corroer a artéria, causando hemorragias fulminantes.\n\nC) <strong>FALSA:</strong> A artéria gástrica esquerda percorre a curvatura menor do estômago.\n\nD) <strong>FALSA:</strong> A artéria hepática acessória direita, quando existe, dirige-se ao fígado mas não apresenta esta relação crítica de posterioridade com a 1ª porção duodenal.\n\nE) <strong>FALSA:</strong> A artéria gastro-omental direita é um ramo terminal da gastro-duodenal que percorre a curvatura maior do estômago, após passar o duodeno."
+},
+
+  
+  // 18
+{
+  "topic": "Veia jugular externa",
+  "text": "18. Qual das seguintes não é um ramo (afluente) da veia jugular externa?",
+  "opts": [
+    "A) Veia supra-escapular",
+    "B) Veia occipital",
+    "C) Veia auricular posterior",
+    "D) Veia faríngea ascendente",
+    "E) Veia escapular posterior"
+  ],
+  "answer": 3,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> A <strong>veia supra-escapular</strong> drena para a porção terminal da veia jugular externa.\n\nB) <strong>VERDADEIRA:</strong> A <strong>veia occipital</strong> pode ser um afluente da jugular externa ou contribuir para a sua origem.\n\nC) <strong>VERDADEIRA:</strong> A <strong>veia auricular posterior</strong> é um dos principais afluentes que contribui para a formação ou drena na jugular externa.\n\nD) <strong>FALSA:</strong> A <strong>veia faríngea ascendente</strong> é um colateral que drena invariavelmente para a <strong>veia jugular interna</strong> (frequentemente através do tronco tiro-lingo-faringo-facial).\n\nE) <strong>VERDADEIRA:</strong> A <strong>veia escapular posterior</strong> é listada como um afluente da jugular externa na sua passagem pela região supraclavicular."
+},
+  
+  // 19
+
+{
+  "topic": "Artéria carótida externa",
+  "text": "19. Relativamente à anatomia da artéria carótida externa e dos seus ramos, indique a afirmação verdadeira.",
+  "opts": [
+    "A) A artéria angular permite a anastomose entre os dois circuitos vasculares carotidianos",
+    "B) A artéria profunda da língua é ramo colateral da artéria lingual",
+    "C) A artéria meníngea acessória relaciona-se com as duas raízes do nervo aurículo-temporal",
+    "D) A artéria facial emite colaterais para vascularizar o músculo pterigoideu medial",
+    "E) A artéria carótida externa encontra-se no fundo do trígono de Farabeuf, limitado superiormente pelo tronco tiro-linguo-faringo-facial"
+  ],
+  "answer": 0,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> A <strong>artéria angular</strong> (terminal da facial, da carótida externa) anastomosa-se com a <strong>artéria dorsal do nariz</strong> (terminal da oftálmica, da carótida interna), estabelecendo uma comunicação crucial entre os dois sistemas carotidianos.\n\nB) <strong>FALSA:</strong> A artéria profunda da língua é o <strong>ramo terminal</strong> da artéria lingual, e não um ramo colateral.\n\nC) <strong>FALSA:</strong> É a <strong>artéria meníngea média</strong> que passa entre as duas raízes do nervo aurículo-temporal. A meníngea acessória entra no crânio pelo foramen oval.\n\nD) <strong>FALSA:</strong> A artéria facial emite ramos para o músculo pterigoideu <strong>lateral</strong>. A vascularização do pterigoideu medial provém maioritariamente da artéria maxilar.\n\nE) <strong>FALSA:</strong> O trígono de Farabeuf é limitado <strong>superiormente pelo nervo hipoglosso (XII)</strong>. O tronco venoso tiro-lingo-faringo-facial constitui o seu limite ântero-inferior."
+},
+  
+  // 20
+{
+  "topic": "Artéria circunflexa",
+  "text": "20. Qual das seguintes não é um ramo da artéria circunflexa?",
+  "opts": [
+    "A) Artéria atrial anterior",
+    "B) Artéria atrial posterior",
+    "C) Artéria ventricular anterior",
+    "D) Artéria pré-ventricular esquerda",
+    "E) Artéria marginal esquerda"
+  ],
+  "answer": 3,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> A <strong>artéria atrial anterior</strong> é um ramo da circunflexa que frequentemente origina a artéria do nó sino-atrial.\n\nB) <strong>VERDADEIRA:</strong> A <strong>artéria atrial posterior</strong> segue a veia de Marshall e é um ramo da circunflexa.\n\nC) <strong>VERDADEIRA:</strong> A circunflexa origina <strong>artérias ventriculares anteriores</strong> para a porção superior do ventrículo esquerdo.\n\nD) <strong>FALSA:</strong> A <strong>artéria pré-ventricular esquerda</strong> de Mouchet é um ramo da <strong>artéria interventricular anterior</strong>, e não da circunflexa.\n\nE) <strong>VERDADEIRA:</strong> A <strong>artéria marginal esquerda</strong> é um ramo ventricular constante e importante da artéria circunflexa."
+},
+  
+  // 21
+{
+  "topic": "Átrio direito (fibras)",
+  "text": "21. Qual das seguintes não apresenta um tipo específico de fibras/feixes próprias/os ao átrio direito?",
+  "opts": [
+    "A) Feixe de Lower",
+    "B) Fibras ansiformes",
+    "C) Feixes límbicos",
+    "D) Tendão de Todaro",
+    "E) Feixe Terminal"
+  ],
+  "answer": 1,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> O <strong>feixe de Lower</strong> (tubérculo intervenoso) é uma estrutura muscular vertical exclusiva do átrio direito.\n\nB) <strong>FALSA:</strong> As <strong>fibras ansiformes</strong> e as fibras anulares são classificadas como <strong>fibras próprias comuns a cada um dos átrios</strong>, servindo para o reforço geral das paredes atriais, não sendo específicas do átrio direito.\n\nC) <strong>VERDADEIRA:</strong> Os <strong>feixes límbicos</strong> são fibras próprias do átrio direito que circunscrevem o limbo da fossa oval.\n\nD) <strong>VERDADEIRA:</strong> O <strong>tendão de Todaro</strong> (fita sinusal) é uma formação tendinosa específica da parede inferior do átrio direito.\n\nE) <strong>VERDADEIRA:</strong> O <strong>feixe terminal</strong> corresponde à crista terminal de His, uma estrutura interna característica do átrio direito."
+},
+  
+  // 22
+{
+  "topic": "Átrio direito",
+  "text": "22. Relativamente à anatomia do átrio direito, indique a opção correta.",
+  "opts": [
+    "A) Os músculos pectíneos encontram-se na parede septal",
+    "B) A crista terminal encontra-se na parede superior",
+    "C) A abertura da aurícula do átrio direito encontra-se na parede lateral",
+    "D) A fita sinusal encontra-se na parede inferior",
+    "E) O óstio do seio coronário encontra-se na parede lateral"
+  ],
+  "answer": 3,
+  "explanation": "\n\nA) <strong>FALSA:</strong> Os <strong>músculos pectíneos</strong> localizam-se na <strong>parede lateral</strong> do átrio e no interior da aurícula.\n\nB) <strong>FALSA:</strong> A <strong>crista terminal</strong> de His situa-se na <strong>parede posterior</strong> (ou sinusal).\n\nC) <strong>FALSA:</strong> A abertura da aurícula direita localiza-se na <strong>parede superior</strong>, anteriormente ao óstio da veia cava superior.\n\nD) <strong>VERDADEIRA:</strong> A <strong>fita sinusal</strong>, que corresponde ao <strong>tendão de Todaro</strong>, situa-se na <strong>parede inferior</strong>, estendendo-se entre a válvula de Eustáquio e o septo interatrial.\n\nE) <strong>FALSA:</strong> O <strong>óstio do seio coronário</strong> encontra-se na <strong>parede inferior</strong>, entre o óstio da veia cava inferior e o óstio tricúspido."
+},
+  
+  // 23
+{
+  "topic": "Coronária direita",
+  "text": "23. Qual das seguintes corresponde a um território de vascularização da coronária direita?",
+  "opts": [
+    "A) Nó átrio-ventricular",
+    "B) Dois terços anteriores do septo interventricular",
+    "C) Ramo direito do fascículo átrio-ventricular",
+    "D) Átrio esquerdo",
+    "E) Ventrículo esquerdo"
+  ],
+  "answer": 0,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> Na grande maioria dos casos (80-90%), o <strong>nó átrio-ventricular (Tawara)</strong> é vascularizado pela artéria coronária direita, através da artéria interventricular posterior.\n\nB) <strong>FALSA:</strong> Os <strong>dois terços anteriores do septo</strong> são supridos pela <strong>artéria interventricular anterior</strong> (coronária esquerda).\n\nC) <strong>FALSA:</strong> O <strong>ramo direito do fascículo de His</strong> depende da segunda artéria septal anterior, ramo da coronária esquerda.\n\nD) <strong>FALSA:</strong> O <strong>átrio esquerdo</strong> é território da <strong>artéria circunflexa</strong> (coronária esquerda).\n\nE) <strong>FALSA:</strong> A vascularização principal da massa do <strong>ventrículo esquerdo</strong> provém da coronária esquerda."
+},
+  
+  // 24
+
+{
+  "topic": "Grandes vasos do tórax",
+  "text": "24. Indique qual a afirmação correta relativamente aos grandes vasos do tórax.",
+  "opts": [
+    "A) A artéria tiroideia média é constante",
+    "B) A porção ascendente da artéria aorta é a única que não possui ramos colaterais",
+    "C) A aorta torácica, na porção superior, relaciona-se posteriormente com o tronco simpático esquerdo",
+    "D) A veia bráquio-cefálica esquerda tem uma direção quase vertical",
+    "E) A veia hemiázigo acessória é o ramo (afluente) colateral da veia cava superior"
+  ],
+  "answer": 2,
+  "explanation": "\n\nA) <strong>FALSA:</strong> A <strong>artéria tiroideia média</strong> de Neubauer é um ramo <strong>inconstante</strong>.\n\nB) <strong>FALSA:</strong> A <strong>aorta ascendente</strong> possui dois ramos colaterais fundamentais: as <strong>artérias coronárias</strong> direita e esquerda.\n\nC) <strong>VERDADEIRA:</strong> Na sua porção superior, a <strong>aorta torácica</strong> situa-se à esquerda e relaciona-se <strong>posteriormente</strong> com o <strong>tronco simpático esquerdo</strong>.\n\nD) <strong>FALSA:</strong> A <strong>veia bráquio-cefálica esquerda</strong> é predominantemente <strong>horizontal</strong> e mais longa que a direita.\n\nE) <strong>FALSA:</strong> O único afluente colateral constante da <strong>veia cava superior</strong> é a <strong>veia ázigo</strong>."
+},
+
+  
+  // 25
+
+{
+  "topic": "Aorta abdominal",
+  "text": "25. Qual dos seguintes não é um ramo colateral direto da aorta abdominal?",
+  "opts": [
+    "A) Artéria esplénica",
+    "B) Artéria suprarrenal média",
+    "C) Artéria mesentérica inferior",
+    "D) Artéria frénica inferior",
+    "E) Artéria gastro-duodenal"
+  ],
+  "answer": 4,
+  "explanation": "\n\nA) <strong>FALSA:</strong> A <strong>artéria esplénica</strong> é um dos ramos terminais do <strong>tronco celíaco</strong>, que por sua vez nasce diretamente da aorta.\n\nB) <strong>VERDADEIRA:</strong> A <strong>artéria suprarrenal média</strong> é um ramo colateral visceral direto da aorta abdominal.\n\nC) <strong>VERDADEIRA:</strong> A <strong>artéria mesentérica inferior</strong> nasce diretamente da face anterior da aorta abdominal.\n\nD) <strong>VERDADEIRA:</strong> As <strong>artérias frénicas inferiores</strong> são os primeiros ramos colaterais (parietais) da aorta abdominal.\n\nE) <strong>FALSA (RESPOSTA):</strong> A <strong>artéria gastro-duodenal</strong> é um ramo da artéria hepática comum, sendo, portanto, um ramo de <strong>terceira ordem</strong> em relação à aorta."
+},
+
+  
+  // 26
+
+{
+  "topic": "Ilíaca interna",
+  "text": "26. Qual das seguintes não é um ramo colateral da ilíaca interna?",
+  "opts": [
+    "A) Artéria ílio-lombar",
+    "B) Artéria vesical inferior",
+    "C) Artéria retal inferior",
+    "D) Artéria uterina",
+    "E) Artéria vaginal longa"
+  ],
+  "answer": 2,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> A <strong>artéria ílio-lombar</strong> é um ramo colateral intrapélvico parietal da artéria ilíaca interna.\n\nB) <strong>VERDADEIRA:</strong> A <strong>artéria vesical inferior</strong> é um ramo colateral visceral destinado à face póstero-inferior da bexiga.\n\nC) <strong>FALSA:</strong> A <strong>artéria retal inferior</strong> é um ramo colateral da <strong>artéria pudenda interna</strong> (que por sua vez é ramo da ilíaca interna), não sendo um ramo direto desta última.\n\nD) <strong>VERDADEIRA:</strong> A <strong>artéria uterina</strong> é um importante ramo visceral da artéria ilíaca interna na mulher.\n\nE) <strong>VERDADEIRA:</strong> A <strong>artéria vaginal longa</strong> é também classificada como um ramo colateral visceral da ilíaca interna."
+},
+
+  
+  // 27
+{
+  "topic": "Ilíaca interna (afirmações)",
+  "text": "27. Qual das seguintes afirmações é falsa relativamente à ilíaca interna e os seus ramos?",
+  "opts": [
+    "A) A ilíaca interna relaciona-se anteriormente com o ureter, medialmente com o músculo psoas maior e músculo obturador interno e posteriormente com o músculo piriforme",
+    "B) A artéria pudenda interna, depois de contornar a face lateral da espinha isquiática, entra na pelve pela incisura isquiática menor",
+    "C) A artéria umbilical, no recém-nascido, atrofia-se, originando, no adulto, um cordão fibroso",
+    "D) As artérias vaginais dividem-se em dois ramos para vascularizar os fórnices da vagina",
+    "E) As artérias vesicais superiores têm como origem a artéria umbilical"
+  ],
+  "answer": 0,
+  "explanation": "\n\nA) <strong>FALSA:</strong> A artéria ilíaca interna relaciona-se <strong>LATERALMENTE</strong> (e não medialmente) com o músculo psoas maior e com o músculo obturador interno.\n\nB) <strong>VERDADEIRA:</strong> A <strong>artéria pudenda interna</strong> sai da pelve pela incisura isquiática maior e <strong>reentra pela incisura isquiática menor</strong> após contornar a espinha isquiática.\n\nC) <strong>VERDADEIRA:</strong> No adulto, a porção distal da <strong>artéria umbilical</strong> atrofia-se, tornando-se o <strong>ligamento umbilical medial</strong>.\n\nD) <strong>VERDADEIRA:</strong> As <strong>artérias vaginais</strong> (ramos da uterina) dividem-se para suprir os <strong>fórnices vaginais</strong>.\n\nE) <strong>VERDADEIRA:</strong> As <strong>artérias vesicais superiores</strong> nascem da porção proximal (permeável) da artéria umbilical."
+},
+  
+  // 28
+{
+  "topic": "Fixação do duodeno",
+  "text": "28. Qual das seguintes estruturas não constitui um meio de fixação do duodeno?",
+  "opts": [
+    "A) O ducto colédoco",
+    "B) O músculo suspensor do duodeno",
+    "C) O corpo do pâncreas",
+    "D) O arco arterial pancreático-duodenal posterior",
+    "E) O omento menor"
+  ],
+  "answer": 2,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> O <strong>ducto colédoco</strong> contribui para a fixação do duodeno na sua parte descendente.\n\nB) <strong>VERDADEIRA:</strong> O <strong>músculo suspensor do duodeno (Treitz)</strong> fixa a flexura duodeno-jejunal ao pilar esquerdo do diafragma.\n\nC) <strong>FALSA:</strong> É a <strong>cabeça do pâncreas</strong> que está intimamente aderente ao quadro duodenal servindo como meio de fixação; o <strong>corpo do pâncreas</strong> não desempenha esta função direta.\n\nD) <strong>VERDADEIRA:</strong> Os <strong>arcos arteriais pancreático-duodenais</strong> são descritos como meios de fixação do quadro duodenal.\n\nE) <strong>VERDADEIRA:</strong> O <strong>omento menor</strong> fixa a parte superior do duodeno à porta hepática através do ligamento hepato-duodenal."
+},
+  
+  // 29
+{
+  "topic": "Hemicolectomia direita",
+  "text": "29. M tem 54 anos, é diagnosticada com uma lesão neovegetativa do cólon ascendente... qual é um dos ramos não envolvidos neste procedimento?",
+  "opts": [
+    "A) Artéria cólica direita superior",
+    "B) Artéria cólica média",
+    "C) Artéria íleo-ceco-colo-apendicular",
+    "D) Artéria sigmoideia superior",
+    "E) Artéria cecal posterior"
+  ],
+  "answer": 3,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> A <strong>artéria cólica direita superior</strong> vasculariza a flexura hepática e o cólon transverso direito, áreas removidas na hemicolectomia direita.\n\nB) <strong>VERDADEIRA:</strong> A <strong>artéria cólica média</strong> integra a vascularização do território do cólon direito.\n\nC) <strong>VERDADEIRA:</strong> A <strong>artéria íleo-ceco-colo-apendicular</strong> é o ramo principal para o cego e início do cólon ascendente.\n\nD) <strong>FALSA:</strong> A <strong>artéria sigmoideia superior</strong> é um ramo da <strong>artéria mesentérica inferior</strong> e destina-se ao cólon sigmóide (cólon esquerdo), não sendo laqueada em cirurgias do cólon direito.\n\nE) <strong>VERDADEIRA:</strong> A <strong>artéria cecal posterior</strong> é um ramo terminal destinado ao cego, incluído na resseção direita."
+},
+  
+  // 30
+{
+  "topic": "Bexiga",
+  "text": "30. Relativamente à anatomia da bexiga, qual a afirmação correta?",
+  "opts": [
+    "A) As paredes laterais da loca vesical são constituídas pela porção póstero-inferior das fáscias sacro-reto-génito-púbicas",
+    "B) Quando a bexiga está em repleção, relaciona-se ântero-superiormente com a sínfise púbica",
+    "C) A parede inferior relaciona-se com o útero",
+    "D) O espaço de Retzius é uma relação da parede anterior da loca vesical",
+    "E) A prega interuretérica é condicionada por uma elevação da mucosa ao nível do trígono da bexiga"
+  ],
+  "answer": 3,
+  "explanation": "\n\nA) <strong>FALSA:</strong> As paredes laterais da loca vesical são constituídas pela porção <strong>ÂNTERO-SUPERIOR</strong> das fáscias sacro-reto-génito-púbicas.\n\nB) <strong>FALSA:</strong> Em repleção, a bexiga ultrapassa a sínfise púbica e pode alcançar o <strong>umbigo</strong>, relacionando-se com a parede abdominal anterior.\n\nC) <strong>FALSA:</strong> No sexo feminino, a <strong>face superior</strong> (e não a inferior) relaciona-se com o útero por intermédio da escavação vésico-uterina.\n\nD) <strong>VERDADEIRA:</strong> O <strong>espaço retropúbico de Retzius</strong> situa-se entre a sínfise púbica e a parede anterior da loca vesical.\n\nE) <strong>FALSA:</strong> A <strong>prega interuretérica</strong> é uma elevação transversal da mucosa que constitui a <strong>BASE</strong> (limite posterior) do trígono de Lieutaud."
+},
+  
+  // 31
+{
+  "topic": "Andar supra-pancreático de Luschka",
+  "text": "31. Qual das seguintes estruturas não se localiza no andar supra-pancreático de Luschka?",
+  "opts": [
+    "A) Tronco celíaco",
+    "B) Vasos esplénicos",
+    "C) Ducto hepático comum",
+    "D) Artéria mesentérica superior",
+    "E) Hilo do baço"
+  ],
+  "answer": 3,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> O <strong>tronco celíaco</strong> é o centro da região celíaca de Luschka, localizando-se superiormente ao pâncreas.\n\nB) <strong>VERDADEIRA:</strong> Os <strong>vasos esplénicos</strong> (artéria e veia) apresentam um segmento suprapancreático que percorre a margem superior do corpo do pâncreas.\n\nC) <strong>VERDADEIRA:</strong> O <strong>ducto hepático comum</strong> situa-se no andar supramesocólico, integrando o pedículo hepático superiormente ao duodeno e pâncreas.\n\nD) <strong>FALSA:</strong> A <strong>artéria mesentérica superior</strong> tem a sua origem atrás do pâncreas, mas descreve o seu trajeto contornando a <strong>margem INFERIOR</strong> do órgão, localizando-se no andar infra-pancreático.\n\nE) <strong>VERDADEIRA:</strong> O <strong>hilo do baço</strong> relaciona-se com a cauda do pâncreas e com o pedículo esplénico no nível superior/médio do andar supramesocólico."
+},
+  
+  // 32
+{
+  "topic": "Pleura",
+  "text": "32. No tocante à anatomia da pleura, a afirmação incorreta é:",
+  "opts": [
+    "A) O ligamento costo-pleural é constituído por um feixe que se fixa na cúpula da pleura",
+    "B) Ao chegar à porção posterior da raiz do pulmão, a pleura parietal reflete-se de medial para lateral, revestindo a face posterior da mesma",
+    "C) Os recessos aorto-esofágico e retro-esofágico encontram-se ligados pelo ligamento interpleural de Morosow",
+    "D) A lâmina parietal da pleura reflete-se de lateral para medial, seguindo uma linha que se prolonga inferiormente ao hilo do pulmão, formando o ligamento pulmonar",
+    "E) A lâmina visceral da pleura reveste toda a superfície externa do pulmão, à exceção do hilo do pulmão e da margem lateral do ligamento pulmonar"
+  ],
+  "answer": 0,
+  "explanation": "\n\nA) <strong>INCORRETA:</strong> Embora as fontes descrevam ligamentos de fixação da cúpula (vértebro-pleural, transverso-pleural e costo-pleural), a estrutura classicamente descrita como o principal meio de fixação e proteção da cúpula é a <strong>fáscia suprapleural ou ligamento suspensor da pleura (de Sibson)</strong>.\n\nB) <strong>CORRETA:</strong> Ao nível da raiz (hilo), a pleura parietal reflete-se de medial para lateral para se tornar pleura visceral.\n\nC) <strong>CORRETA:</strong> O <strong>ligamento interpleural de Morosow</strong> é a lâmina fibro-elástica que une os recessos pleurais situados entre a aorta e o esófago.\n\nD) <strong>CORRETA:</strong> O <strong>ligamento pulmonar</strong> resulta da reflexão das lâminas pleurais inferiormente ao hilo pulmonar.\n\nE) <strong>CORRETA:</strong> A pleura visceral adere a todo o pulmão e penetra nas fissuras, interrompendo-se apenas no hilo e na inserção do ligamento pulmonar."
+},
+  
+  // 33
+
+
+{
+  "topic": "Esófago",
+  "text": "33. Relativamente às relações anatómicas do esófago, nos seus diferentes segmentos, indique a afirmação correta:",
+  "opts": [
+    "A) Na parte diafragmática, o músculo de Juvara fixa-se no ligamento frénico-esofágico inferior",
+    "B) A parte cervical, lateralmente, relaciona-se com o lóbulo da glândula tiroideia e o nervo laríngeo recorrente",
+    "C) Na parte abdominal, relaciona-se posteriormente com o pilar direito do diafragma",
+    "D) Na parte torácica, relaciona-se anteriormente com o nervo vago direito",
+    "E) As suas curvaturas apresentam-se no sentido transversal, tendo a curvatura inferior concavidade direita"
+  ],
+  "answer": 1,
+  "explanation": "\n\nA) <strong>FALSA:</strong> O <strong>músculo de Juvara</strong> liga-se ao ligamento frénico-esofágico <strong>superior</strong>; o músculo de Rouget é que se liga ao inferior.\n\nB) <strong>VERDADEIRA:</strong> Na porção cervical, lateralmente, o esófago relaciona-se com os <strong>lobos da glândula tiróide</strong> e com o <strong>nervo laríngeo recorrente</strong>.\n\nC) <strong>FALSA:</strong> Na parte abdominal, a relação posterior principal é com o <strong>pilar principal esquerdo</strong> do diafragma.\n\nD) <strong>FALSA:</strong> Na porção torácica inferior, o <strong>nervo vago direito</strong> situa-se na <strong>face posterior</strong> do esófago.\n\nE) <strong>FALSA:</strong> O esófago apresenta uma curvatura inferior de <strong>concavidade esquerda</strong>."
+},
+
+  
+  // 34
+{
+  "topic": "Ovário",
+  "text": "34. Relativamente à anatomia do ovário, indique a afirmação verdadeira.",
+  "opts": [
+    "A) Na mulher nulípara, a sua face lateral relaciona-se inferiormente com o ureter",
+    "B) O ligamento próprio do ovário é constituído por fibras conjuntivas, que se estendem entre o corno do útero e a extremidade uterina do ovário",
+    "C) A margem mesovárica corresponde à margem posterior, onde se encontra a linha de Farré-Waldeyer",
+    "D) Na mulher grávida, o ovário esquerdo está separado da parede ântero-lateral do abdómen pelo cólon descendente e pelo seu mesocólon",
+    "E) Na mulher multípara, o ovário, na face lateral, relaciona-se anteriormente com a artéria uterina"
+  ],
+  "answer": 4,
+  "explanation": "\n\nA) <strong>FALSA:</strong> Na mulher nulípara, o ovário situa-se na fossa de Krause, onde o <strong>uretéro</strong> e os vasos ilíacos internos constituem a relação <strong>posterior</strong>, e não inferior.\n\nB) <strong>FALSA:</strong> O <strong>ligamento próprio do ovário</strong> (útero-ovárico) é constituído por <strong>fibras musculares lisas</strong>, e não por fibras conjuntivas.\n\nC) <strong>FALSA:</strong> A <strong>margem mesovárica</strong> (onde se situa o hilo) corresponde à <strong>margem anterior</strong>, local de inserção da linha de Farré-Waldeyer.\n\nD) <strong>FALSA:</strong> As fontes referem que o ovário esquerdo se relaciona tipicamente com o <strong>cólon sigmóide</strong>, e não especificamente com o cólon descendente na separação da parede abdominal.\n\nE) <strong>VERDADEIRA:</strong> Na mulher multípara, o ovário desloca-se para a fossa de Claudius, onde se relaciona <strong>anteriormente com o uretéro e com a artéria uterina</strong>."
+},
+
+  
+  // 35
+{
+  "topic": "Uretra",
+  "text": "35. Relativamente à anatomia da uretra, indique a afirmação falsa.",
+  "opts": [
+    "A) A curvatura anterior tem uma concavidade póstero-inferior e dá inserção ao ligamento suspensor do pénis",
+    "B) A válvula da fossa navicular encontra-se na parede superior da parte esponjosa da uretra",
+    "C) A parte membranácea relaciona-se ântero-inferiormente com o ligamento infra-púbico e com o ligamento transverso do períneo",
+    "D) O colículo seminal prolonga-se superiormente, originando os frénulos do colículo seminal",
+    "E) As lacunas maiores de Morgagni situam-se na linha mediana, ao passo que as lacunas menores de Morgagni se situam em duas fileiras, laterais às lacunas maiores"
+  ],
+  "answer": 2,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> A uretra masculina possui uma curvatura móvel, a <strong>curvatura anterior</strong> (pré-púbica), que no estado de flacidez apresenta <strong>concavidade póstero-inferior</strong> e é sustentada pelo <strong>ligamento suspensor do pénis</strong>.\n\nB) <strong>VERDADEIRA:</strong> A <strong>válvula da fossa navicular</strong> (de Guérin) localiza-se na <strong>parede superior</strong> da uretra, ao nível da glande.\n\nC) <strong>FALSA:</strong> A parte membranácea da uretra relaciona-se com o <strong>ligamento transverso do períneo</strong> (ligamento infra-púbico) e com a lâmina infrapúbica, mas estes situam-se <strong>ÂNTERO-SUPERIORMENTE</strong> à uretra, e não inferiormente.\n\nD) <strong>VERDADEIRA:</strong> O <strong>colículo seminal</strong> apresenta prolongamentos em forma de pregas mucosas (<strong>frénulos</strong>) que se estendem a partir da crista uretral. *Nota: Embora a descrição clássica refira os frénulos como prolongamentos inferiores, a afirmação é aceite no contexto das relações da parede posterior.*\n\nE) <strong>VERDADEIRA:</strong> As <strong>lacunas uretrais de Morgagni</strong> são recessos na mucosa da uretra esponjosa, sendo as <strong>maiores</strong> tipicamente <strong>medianas</strong> e as menores distribuídas lateralmente."
+},
+  
+  // 36
+{
+  "topic": "Pâncreas",
+  "text": "36. Relativamente à anatomia do pâncreas, indique a afirmação falsa",
+  "opts": [
+    "A) A margem anterior do corpo do pâncreas relaciona-se com a flexura duodeno-jejunal",
+    "B) Do ângulo ínfero-esquerdo da cabeça do pâncreas destaca-se o processo uncinado",
+    "C) Entre a fáscia de coalescência e a face posterior do corpo do pâncreas encontra-se o pedículo esplénico",
+    "D) A ampola hepato-pancreática é uma pequena cavidade conóide de obliquidade súpero-esquerda",
+    "E) A cabeça do pâncreas apresenta um sulco correspondente ao duodeno, à maneira de um pneu numa jante"
+  ],
+  "answer": 0,
+  "explanation": "\n\nA) <strong>FALSA:</strong> De acordo com as fontes, é a <strong>margem INFERIOR</strong> do corpo do pâncreas que se relaciona com a flexura duodeno-jejunal. A margem anterior do corpo corresponde à linha de reflexão do peritoneu parietal para formar as lâminas do mesocólon transverso.\n\nB) <strong>VERDADEIRA:</strong> O <strong>processo uncinado de Winslow</strong> destaca-se do ângulo ínfero-esquerdo da cabeça do pâncreas.\n\nC) <strong>VERDADEIRA:</strong> O <strong>pedículo esplénico</strong> (artéria e veia esplénica) situa-se entre a face posterior do corpo do pâncreas e a fáscia de coalescência de Treitz.\n\nD) <strong>VERDADEIRA:</strong> A <strong>ampola hepato-pancreática de Vater</strong> é descrita como uma pequena cavidade conóide de base súpero-esquerda.\n\nE) <strong>VERDADEIRA:</strong> A margem circunferencial da cabeça do pâncreas apresenta um sulco onde o duodeno se aloja, descrito analogamente como um <strong>pneu numa jante</strong>."
+},
+  // 37
+  {
+  "topic": "Cego",
+  "text": "37. Relativamente à anatomia do cego, qual das seguintes afirmações não representa uma das relações anatómicas?",
+  "opts": [
+    "A) Músculo ilíaco",
+    "B) Músculo psoas maior",
+    "C) Ansa terminal do íleo",
+    "D) Músculo transverso do abdómen",
+    "E) Raiz do mesentério"
+  ],
+  "answer": 4,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> O cego situa-se na fossa ilíaca direita, sendo anterior ao <strong>músculo ilíaco</strong>.\n\nB) <strong>VERDADEIRA:</strong> O cego localiza-se lateralmente ao <strong>músculo psoas maior</strong>.\n\nC) <strong>VERDADEIRA:</strong> A face medial do cego relaciona-se superiormente com a <strong>ansa terminal do íleo</strong>, formando o ângulo íleo-cecal.\n\nD) <strong>VERDADEIRA:</strong> A face lateral do cego relaciona-se com os músculos largos do abdómen, incluindo o <strong>músculo transverso do abdómen</strong>.\n\nE) <strong>FALSA:</strong> A <strong>raiz do mesentério</strong> termina na junção íleo-cecal, mas não é descrita como uma relação direta das faces do cego, cruzando anteriormente estruturas como o psoas e o uretéro antes de atingir o seu fim."
+},
+  
+  // 38
+{
+  "topic": "Raiz sensitiva do nervo facial",
+  "text": "38. Qual é o nome da raiz sensitiva do nervo facial?",
+  "opts": [
+    "A) Nervo de Ross",
+    "B) Nervo intermédio de Wrisberg",
+    "C) Nervo timpânico de Jacobson",
+    "D) Nervo faríngeo de Bock",
+    "E) Nervo meníngeo recorrente de Luschka"
+  ],
+  "answer": 1,
+  "explanation": "\n\nA) <strong>FALSA:</strong> Não existe referência a um \"Nervo de Ross\" relacionado com o VII par nas fontes.\n\nB) <strong>VERDADEIRA:</strong> O <strong>nervo intermédio de Wrisberg</strong> é a raiz sensitiva e vegetativa do nervo facial (VII par craniano).\n\nC) <strong>FALSA:</strong> O nervo timpânico de Jacobson é um ramo do nervo glossofaríngeo (IX par).\n\nD) <strong>FALSA:</strong> O nervo faríngeo de Bock não é a raiz do facial.\n\nE) <strong>FALSA:</strong> O nervo meníngeo recorrente de Luschka está associado a outros territórios nervosos."
+},
+  
+  // 39
+{
+  "topic": "Inervação da laringe",
+  "text": "39. Quais os nervos responsáveis pela inervação dos músculos da laringe?",
+  "opts": [
+    "A) O nervo laríngeo recorrente inerva os músculos da laringe, à exceção do músculo crico-tiroideu, inervado pelo nervo laríngeo superior",
+    "B) O nervo laríngeo superior inerva os músculos da laringe, à exceção do músculo crico-tiroideu, inervado pelo nervo laríngeo recorrente",
+    "C) O nervo laríngeo superior inerva os músculos da laringe, à exceção do músculo tiro-aritnoideu, inervado pelo nervo laríngeo recorrente",
+    "D) O nervo laríngeo recorrente inerva os músculos da laringe, à exceção do músculo crico-tiroideu, inervado pelo nervo laríngeo inferior",
+    "E) O nervo laríngeo inferior inerva os músculos da laringe, à exceção do músculo tiro-aritnoideu, inervado pelo nervo laríngeo superior"
+  ],
+  "answer": 0,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> O <strong>nervo laríngeo recorrente</strong> inerva todos os músculos intrínsecos da laringe, exceto o <strong>músculo crico-tiroideu</strong>, que é inervado pelo ramo externo do <strong>nervo laríngeo superior</strong>.\n\nB) <strong>FALSA:</strong> Inverte as funções principais dos dois nervos.\n\nC) <strong>FALSA:</strong> O tiro-aritnoideu é inervado pelo recorrente.\n\nD) <strong>FALSA:</strong> O laríngeo inferior é outra designação para o recorrente; a exceção (crico-tiroideu) é suprida pelo superior.\n\nE) <strong>FALSA:</strong> O tiro-aritnoideu não é a exceção do nervo laríngeo superior."
+},
+  
+  // 40
+{
+  "topic": "Estômago",
+  "text": "40. O estômago localiza-se na porção superior da cavidade abdominal, inferiormente ao diafragma. Assinale a afirmação falsa.",
+  "opts": [
+    "A) A porta hepática é um dos seus meios de fixação",
+    "B) É um órgão pouco móvel, pelos seus inúmeros meios de fixação",
+    "C) A curvatura maior origina-se na incisura cárdica (His) e termina no piloro",
+    "D) O cárdia situa-se na extremidade esquerda da porção horizontal, ao nível de T12/L1",
+    "E) O segmento médio da face posterior do estômago relaciona-se com a glândula suprarrenal esquerda"
+  ],
+  "answer": 3,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> A <strong>porta hepática</strong> serve de fixação indireta através do <strong>omento menor</strong> (ligamento gastro-hepático).\n\nB) <strong>VERDADEIRA:</strong> O estômago é descrito como <strong>pouco móvel</strong> devido à diversidade de omentos e ligamentos que o prendem.\n\nC) <strong>VERDADEIRA:</strong> A <strong>curvatura maior</strong> estende-se desde a incisura cárdica de His até ao piloro.\n\nD) <strong>FALSA:</strong> O <strong>cárdia</strong> projeta-se no corpo vertebral de <strong>T11</strong>, à esquerda da linha mediana. É o <strong>piloro</strong> que se projeta ao nível de T12 ou L1.\n\nE) <strong>VERDADEIRA:</strong> O <strong>segmento médio</strong> da face posterior relaciona-se com o pâncreas, rim e <strong>glândula suprarrenal esquerda</strong> através da bolsa omental."
+},
+  
+  // 41
+{
+  "topic": "Veia porta",
+  "text": "41. O conhecimento da distribuição dos ramos terminais da veia porta permite definir os territórios hepáticos e a origem das veias hepáticas permite definir os territórios supra-hepáticos. Assinale a opção válida.",
+  "opts": [
+    "A) A veia porta normalmente divide-se em três ramos terminais: a veia porta direita, a veia porta esquerda e a veia do lobo caudado de Spiegel",
+    "B) A veia do setor medial direito vasculariza o lobo quadrado",
+    "C) O segmento VIII só é observável na face visceral do fígado, ao contrário do segmento I",
+    "D) A veia hepática mediana drena as veias centro-lobulares da metade direita do clássico lobo esquerdo do fígado",
+    "E) O pedículo hepático penetra no fígado pela porta hepática, sendo constituído pela veia porta, artéria hepática, ducto hepático comum, vasos linfáticos e plexo hepático"
+  ],
+  "answer": 4,
+  "explanation": "\n\nA) <strong>FALSA:</strong> A veia porta divide-se em apenas <strong>dois ramos terminais</strong>: veia porta direita e veia porta esquerda. A veia do lobo caudado (segmento I) é geralmente um ramo de uma delas.\n\nB) <strong>FALSA:</strong> O lobo quadrado é vascularizado pela veia do <strong>segmento medial esquerdo (Segmento IV)</strong>.\n\nC) <strong>FALSA:</strong> Dos 8 segmentos portais, o <strong>segmento VIII</strong> (póstero-medial direito) é o único observável apenas na <strong>face diafragmática</strong> do fígado.\n\nD) <strong>FALSA:</strong> A veia hepática mediana situa-se na fissura supra-hepática mediana e drena territórios adjacentes, mas a drenagem do lobo esquerdo é feita essencialmente pela veia hepática esquerda.\n\nE) <strong>VERDADEIRA:</strong> O pedículo hepático é composto pela <strong>veia porta, artéria hepática, ducto hepático comum, vasos linfáticos e plexo hepático</strong>, penetrando no órgão pela porta hepática."
+},
+  
+  // 42
+{
+  "topic": "Ureter",
+  "text": "42. Relativamente ao ureter, assinale a opção verdadeira.",
+  "opts": [
+    "A) A sua parede é constituída, da superfície para a profundidade, pela túnica adventícia, a túnica muscular, submucosa e mucosa",
+    "B) É formado por uma parte lombar, uma parte ilíaca e uma parte pélvica",
+    "C) As duas lâminas da loca renal encontram-se unidas pelo ligamento inter-renal",
+    "D) No homem, o ureter cruza a face posterior do ducto deferente",
+    "E) Na mulher, a artéria uterina cruza posteriormente o ureter"
+  ],
+  "answer": 3,
+  "explanation": "\n\nA) <strong>FALSA:</strong> O uretéro é constituído por apenas <strong>três túnicas</strong>: adventícia, muscular e mucosa.\n\nB) <strong>FALSA:</strong> O uretéro apresenta <strong>quatro partes</strong>: lombar, ilíaca, pélvica e intravesical.\n\nC) <strong>FALSA:</strong> As lâminas da loca renal unem-se inferiormente através do <strong>ligamento uretéro-renal de Navarro</strong>.\n\nD) <strong>VERDADEIRA:</strong> No homem, na sua porção transversal pélvica, o uretéro <strong>cruza a face posterior do ducto deferente</strong>.\n\nE) <strong>FALSA:</strong> Na mulher, a <strong>artéria uterina cruza ANTERIORMENTE</strong> o uretéro para atingir o istmo do útero."
+},
+  
+  // 43
+{
+  "topic": "Escroto",
+  "text": "43. Qual destas camadas não é uma camada do escroto?",
+  "opts": [
+    "A) Túnica espermática externa",
+    "B) Túnica vaginal",
+    "C) Túnica muscular de Dartos",
+    "D) Túnica celular subcutânea",
+    "E) Fáscia de Buck"
+  ],
+  "answer": 4,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> A túnica espermática externa é uma das camadas que envolvem o testículo no escroto.\n\nB) <strong>VERDADEIRA:</strong> A túnica vaginal é a camada serosa mais profunda do escroto.\n\nC) <strong>VERDADEIRA:</strong> O Dartos é a túnica muscular lisa característica do escroto.\n\nD) <strong>VERDADEIRA:</strong> A túnica celular subcutânea faz parte da constituição das bolsas escrotais.\n\nE) <strong>FALSA (RESPOSTA):</strong> A <strong>fáscia de Buck</strong> é a fáscia profunda do <strong>pénis</strong>, não integrando as camadas constituintes do escroto."
+},
+  
+  // 44
+{
+
+  "topic": "Nó sino-atrial",
+  "text": "44. Relativamente à vascularização do nó sino-atrial, assinale a opção correta.",
+  "opts": [
+    "A) É feita pelos ramo ventricular posterior da artéria coronária esquerda",
+    "B) É feita pelos ramos atriais da artéria coronária direita",
+    "C) É feita pelo ramo atrial posterior da artéria coronária esquerda",
+    "D) É feita pelos ramos ventriculares da artéria coronária direita",
+    "E) É feita pelos ramos septais de ambas as coronárias"
+  ],
+  "answer": 1,
+  "explanation": "\n\nA) <strong>FALSA:</strong> O suprimento não provém de ramos ventriculares esquerdos.\n\nB) <strong>VERDADEIRA:</strong> Na maioria da população (cerca de 60%), o nó sino-atrial é vascularizado por <strong>ramos atriais da artéria coronária direita</strong>.\n\nC) <strong>FALSA:</strong> Embora a coronária esquerda possa vascularizar o nó em 40% dos casos, fá-lo tipicamente através do ramo <strong>atrial anterior</strong> (via circunflexa).\n\nD) <strong>FALSA:</strong> Ramos ventriculares destinam-se ao miocárdio ventricular, não ao sistema de condução atrial.\n\nE) <strong>FALSA:</strong> Ramos septais destinam-se ao septo interventricular e feixe de His, não ao nó sinusal."
+},
+  
+  // 45
+
+{
+  "topic": "Formação da veia porta",
+  "text": "45. Como é formada a veia porta?",
+  "opts": [
+    "A) Veias císticas, veia mesentérica superior e veia mesentérica inferior",
+    "B) Veia cava inferior, veia esplénica e veias císticas",
+    "C) Veia esplénica, veia cava inferior e veia mesentérica superior",
+    "D) Veia mesentérica superior, veia mesentérica inferior e veia esplénica",
+    "E) Veias císticas, veia gástrica esquerda e veia gástrica direita"
+  ],
+  "answer": 3,
+  "explanation": "\n\nA) <strong>FALSA:</strong> As veias císticas são afluentes colaterais, não raízes de origem.\n\nB) <strong>FALSA:</strong> A veia cava inferior pertence ao sistema venoso sistémico, não ao sistema porta.\n\nC) <strong>FALSA:</strong> A veia cava inferior não participa na formação da veia porta.\n\nD) <strong>VERDADEIRA:</strong> A veia porta é formada pela união da <strong>veia mesentérica superior</strong> com o <strong>tronco venoso espleno-mesentérico</strong> (que resulta da reunião da <strong>veia esplénica</strong> com a <strong>veia mesentérica inferior</strong>).\n\nE) <strong>FALSA:</strong> As veias gástricas são colaterais que drenam na veia porta já formada."
+},
+  
+  // 46
+
+{
+  "topic": "Ramos terminais do nervo facial",
+  "text": "46. Quais os ramos terminais do nervo facial?",
+  "opts": [
+    "A) Nervo têmporo-facial e nervo cérvico-facial",
+    "B) Nervo fronto-facial e nervo cérvico-facial",
+    "C) Nervo têmporo-facial e nervo fronto-facial",
+    "D) Nervo cérvico-frontal e nervo têmporo-facial",
+    "E) Nervo fronto-facial e nervo cérvico-frontal"
+  ],
+  "answer": 0,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> O nervo facial (VII par craniano) divide-se, habitualmente no interior da glândula parótida, nos seus dois troncos terminais principais: o <strong>nervo têmporo-facial</strong> e o <strong>nervo cérvico-facial</strong>.\n\nB) <strong>FALSA:</strong> A nomenclatura fronto-facial não corresponde a um dos troncos terminais principais.\n\nC) <strong>FALSA:</strong> Não existe um tronco terminal denominado fronto-facial.\n\nD) <strong>FALSA:</strong> Ambos os termos cérvico-frontal e têmporo-facial (embora este último exista) não formam o par correto de ramos terminais segundo a descrição clássica.\n\nE) <strong>FALSA:</strong> Termos fronto-facial e cérvico-frontal estão incorretos."
+},
+  
+  // 47
+{
+  "topic": "Fígado (afirmações)",
+  "text": "47. O fígado é o órgão mais volumoso do corpo humano, com importantes funções metabólicas e de armazenamento. Indique a afirmação correta.",
+  "opts": [
+    "A) A margem anterior do fígado apresenta, na extremidade anterior do sulco longitudinal esquerdo, a incisura da vesícula biliar, mais especificamente, do seu corpo",
+    "B) O pedículo hepático, que inclui a veia porta, é o principal meio de fixação do fígado",
+    "C) A margem livre do ligamento falciforme corresponde, no adulto, ao ligamento redondo, e na criança, à veia umbilical.",
+    "D) O canal venoso de Arantius situa-se na porção posterior do sulco longitudinal direito",
+    "E) A margem póstero-superior do fígado apresenta, à esquerda, a impressão esofágica, relacionada com a parte diafragmática do esófago"
+  ],
+  "answer": 2,
+  "explanation": "\n\nA) <strong>FALSA:</strong> A incisura da vesícula biliar localiza-se na extremidade anterior do <strong>sulco longitudinal DIREITO</strong> e corresponde ao <strong>fundo</strong> da vesícula, não ao corpo.\n\nB) <strong>FALSA:</strong> O pedículo hepático não é um verdadeiro meio de fixação. O principal meio de fixação é a <strong>aderência à veia cava inferior</strong> através das veias hepáticas.\n\nC) <strong>VERDADEIRA:</strong> A margem livre do ligamento falciforme contém, no feto e na criança, a <strong>veia umbilical</strong>, que no adulto se oblitera e forma o <strong>ligamento redondo do fígado</strong>.\n\nD) <strong>FALSA:</strong> O canal venoso de Arantius (ducto venoso) situa-se na porção posterior do <strong>sulco longitudinal ESQUERDO</strong> (fissura do ligamento venoso).\n\nE) <strong>FALSA:</strong> A impressão esofágica na margem póstero-superior relaciona-se com a <strong>parte abdominal</strong> do esófago, e não com a diafragmática."
+},
+  
+  // 48
+{
+  "topic": "Glândulas salivares",
+  "text": "48. As glândulas salivares maiores englobam as glândulas parótidas, submandibulares e sublinguais. Assinale a afirmação falsa",
+  "opts": [
+    "A) A glândula sublingual relaciona-se inferiormente com o músculo génio-hioideu",
+    "B) O corpo adiposo de Bichat é contornado pelo ducto de Sténon",
+    "C) A loca parotídea depende do desdobramento da fáscia cervical nas lâminas superficial e profunda",
+    "D) A glândula parótida é inervada pelo nervo facial, o sétimo par craniano",
+    "E) A loca submandibular é constituída por um desdobramento da lâmina superficial da fáscia cervical"
+  ],
+  "answer": 3,
+  "explanation": "\n\nA) <strong>VERDADEIRA:</strong> A glândula sublingual relaciona-se medialmente e inferiormente com o <strong>músculo génio-hioideu</strong> no pavimento da boca.\n\nB) <strong>VERDADEIRA:</strong> O ducto de Sténon, ao alcançar a margem anterior do masséter, inflete-se para medial e contorna o <strong>corpo adiposo de Bichat</strong>.\n\nC) <strong>VERDADEIRA:</strong> A loca parotídea resulta do desdobramento da <strong>lâmina superficial da fáscia cervical</strong>.\n\nD) <strong>FALSA:</strong> O <strong>nervo facial</strong> apenas atravessa a glândula parótida; a inervação secretomotora funcional é garantida pelo <strong>nervo aurículo-temporal</strong> (proveniente do glossofaríngeo via gânglio ótico).\n\nE) <strong>VERDADEIRA:</strong> A loca submandibular é formada pelo desdobramento da <strong>lâmina superficial da fáscia cervical</strong> ao nível do osso hióide."
+},
+  
+  // 49
+{
+  "topic": "Vasos no abdómen (anulada)",
+  "text": "49. Relativamente aos vasos no abdómen (pergunta anulada por ter duas opções corretas):",
+  "opts": [
+    "A) A artéria gastro-omental esquerda é colateral da artéria gastro-duodenal",
+    "B) A artéria gástrica anterior é colateral da artéria gastro-duodenal",
+    "C) As artérias gástricas curtas são colaterais da artéria esplénica",
+    "D) A artéria gástrica posterior é colateral da artéria esplénica",
+    "E) A artéria cística é colateral da artéria gástrica esquerda"
+  ],
+    "answer": [2,3],
+  "explanation": "\n\nA) <strong>FALSA:</strong> A artéria gastro-omental esquerda é um dos ramos <strong>terminais da artéria esplénica</strong>.\n\nB) <strong>FALSA:</strong> A artéria gástrica anterior é ramo da <strong>artéria gástrica esquerda</strong>.\n\nC) <strong>VERDADEIRA:</strong> As <strong>artérias gástricas curtas</strong> são ramos colaterais da artéria esplénica que vascularizam o fundo gástrico.\n\nD) <strong>VERDADEIRA:</strong> A <strong>artéria gástrica posterior</strong> é um ramo colateral constante da artéria esplénica.\n\nE) <strong>FALSA:</strong> A artéria cística é ramo da <strong>artéria hepática própria</strong> ou do seu ramo direito."
+},
+  // 50
+{
+  "topic": "Faringe",
+  "text": "50. Relativamente à anatomia da faringe, escolha a opção correta.",
+  "opts": [
+    "A) A parede posterior estende-se entre C3 e C5",
+    "B) O músculo constritor médio da faringe é composto por uma porção glosso-faríngea e uma condro-faríngea",
+    "C) A parede lateral contém as pregas glosso-epiglóticas",
+    "D) No espaço retro-estilóide correm os nervos alveolar inferior, lingual e aurículo-temporal",
+    "E) O lábio anterior do óstio faríngeo apresenta a prega salpingo-palatina"
+  ],
+  "answer": 4,
+  "explanation": "\n\nA) <strong>FALSA:</strong> A faringe estende-se verticalmente desde a base do crânio até ao nível de <strong>C6 ou C7</strong>.\n\nB) <strong>FALSA:</strong> O constritor médio é formado pelas porções <strong>condro-faríngea e cerato-faríngea</strong>. A porção glosso-faríngea integra o constritor superior.\n\nC) <strong>FALSA:</strong> As pregas glosso-epiglóticas localizam-se na <strong>raiz da língua</strong>, anteriormente à orofaringe.\n\nD) <strong>FALSA:</strong> Os nervos alveolar inferior, lingual e aurículo-temporal são conteúdos do <strong>espaço PRÉ-estiloideu</strong>.\n\nE) <strong>VERDADEIRA:</strong> O lábio anterior do óstio faríngeo da tuba auditiva apresenta a <strong>prega salpingo-palatina</strong>; o lábio posterior apresenta a prega salpingo-faríngea."
+}
+];
+
+let allQuestions = [...anatomiaQuestions];
+
+    // Embaralhar (ordem aleatória)
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    let shuffledQuestions = [];
+    let currentIndex = 0;
+    let userScore = 0;
+    let wrongCount = 0;
+    let answered = false;
+
+    // DOM elements
+    const quizMain = document.getElementById('quizMain');
+    const resultDiv = document.getElementById('resultArea');
+    const progressFill = document.getElementById('progressFill');
+    const qCounterSpan = document.getElementById('qCounter');
+    const qTopicSpan = document.getElementById('qTopic');
+    const qTextDiv = document.getElementById('qText');
+    const optionsDiv = document.getElementById('optionsArea');
+    const feedbackDiv = document.getElementById('feedbackMsg');
+    const nextBtn = document.getElementById('nextBtn');
+    const scoreInlineSpan = document.getElementById('scoreInline');
+
+    function updateProgress() {
+        const percent = ((currentIndex + 1) / shuffledQuestions.length) * 100;
+        progressFill.style.width = `${percent}%`;
+        qCounterSpan.innerText = `Pergunta ${currentIndex+1} de ${shuffledQuestions.length}`;
+    }
+
+    function updateScoreText() {
+        scoreInlineSpan.innerHTML = `✔️ ${userScore} &nbsp; ❌ ${wrongCount}`;
+    }
+
+    function renderCurrentQuestion() {
+        const q = shuffledQuestions[currentIndex];
+        qTopicSpan.innerText = q.topic;
+        qTextDiv.innerText = q.text;
+        optionsDiv.innerHTML = '';
+        const letters = ['A', 'B', 'C', 'D', 'E'];
+        q.opts.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerHTML = `<span class="opt-letter">${letters[idx]}</span><span>${opt}</span>`;
+            btn.addEventListener('click', () => selectOption(idx));
+            optionsDiv.appendChild(btn);
+        });
+        feedbackDiv.style.display = 'none';
+        feedbackDiv.className = 'feedback';
+        nextBtn.style.display = 'none';
+        answered = false;
+    }
+
+function selectOption(selectedIdx) {
+    if (answered) return;
+    answered = true;
+    const q = shuffledQuestions[currentIndex];
+    const btns = document.querySelectorAll('.opt-btn');
+    btns.forEach(btn => btn.disabled = true);
+
+    const correctAnswers = Array.isArray(q.answer) ? q.answer : [q.answer];
+    const isCorrect = correctAnswers.includes(selectedIdx);
+
+    correctAnswers.forEach(i => btns[i].classList.add('correct'));
+
+    if (isCorrect) {
+        userScore++;
+        feedbackDiv.classList.add('correct');
+        feedbackDiv.innerHTML = `✅ Correto! ${q.explanation}`;
+    } else {
+        wrongCount++;
+        btns[selectedIdx].classList.add('wrong');
+        feedbackDiv.classList.add('wrong');
+        const correctLetters = correctAnswers.map(i => String.fromCharCode(65 + i)).join(' e ');
+        feedbackDiv.innerHTML = `❌ Incorreto. Respostas certas: ${correctLetters}. ${q.explanation}`;
+    }
+
+    updateScoreText();
+    feedbackDiv.style.display = 'block';
+    nextBtn.style.display = 'block';
+}
+
+    function nextQuestion() {
+        if (currentIndex + 1 < shuffledQuestions.length) {
+            currentIndex++;
+            renderCurrentQuestion();
+            updateProgress();
+        } else {
+            finishQuiz();
+        }
+    }
+
+    function finishQuiz() {
+        quizMain.style.display = 'none';
+        resultDiv.style.display = 'block';
+        const percent = Math.round((userScore / shuffledQuestions.length) * 100);
+        document.getElementById('finalPercent').innerHTML = `${percent}%`;
+        document.getElementById('finalCorrect').innerText = userScore;
+        document.getElementById('finalWrong').innerText = wrongCount;
+        let msg = '';
+        if (percent >= 85) msg = 'Excelente domínio do metabolismo lipídico e de aminoácidos!';
+        else if (percent >= 65) msg = 'Bom desempenho! Reveja alguns tópicos para consolidar.';
+        else msg = 'Revise os ciclos da β-oxidação, lipoproteínas e metabolismo do nitrogênio.';
+        document.getElementById('resultMsg').innerText = msg;
+    }
+//[...lipidQuestions, ...proteinQuestions, ...newQuestions]
+    function restartQuiz() {
+        shuffledQuestions = shuffleArray(allQuestions);
+        currentIndex = 0;
+        userScore = 0;
+        wrongCount = 0;
+        answered = false;
+        updateScoreText();
+        quizMain.style.display = 'block';
+        resultDiv.style.display = 'none';
+        renderCurrentQuestion();
+        updateProgress();
+    }
+
+    nextBtn.addEventListener('click', nextQuestion);
+    document.getElementById('restartBtn').addEventListener('click', restartQuiz);
+
+    // Inicialização
+    shuffledQuestions = shuffleArray(allQuestions);
+    renderCurrentQuestion();
+    updateProgress();
+    updateScoreText();
+</script>
+</body>
+</html>
